@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Letterboxd Review Formatter",
+    "version": "0.0.0.1",
+    "description": "A simple interface for formatting Letterboxd reviews.",
+    "icons": {
+        "16": "images/icon-16.png",
+        "48": "images/icon-48.png",
+        "128": "images/icon-128.png"
+    },
+    "content_scripts": [
+        {
+            "js": ["scripts/content.js"],
+            "matches": ["https://*.letterboxd.com/*"]
+                }   
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["resources/format-row.html", "resources/content-section.html"],
+            "matches": ["https://*.letterboxd.com/*"]
+        }
+    ]
+}
