@@ -7,6 +7,7 @@ const tags = {
 var format_row_html = "";
 
 var text_area = null;
+var preview_area = null;
 
 fetch(chrome.runtime.getURL('/resources/format-row.html')).then(r => r.text()).then(html => {
     format_row_html = html;
@@ -22,14 +23,11 @@ function insertTagAtRange(valueStart, valueEnd){
     if(valueEnd){
         text_area.setRangeText(valueEnd, end, end, 'preserve' );
     }
-
     if(valueStart){
         text_area.setRangeText(valueStart, start, start, 'preserve');
     }
-
     text_area.selectionStart += valueStart.length;
     text_area.focus();
-
 };
 
 
@@ -89,45 +87,75 @@ function insertHyperlink(){
     var tag = `<a href="${linkUrl}">${linkText}</a>`;
     text_area.setRangeText(tag, start, end, 'end');
     text_area.focus();
-
 };
 
+function createPreviewArea(){
+    let preview = document.createElement('div');
+    preview.classList.add( "review", "body-text", "-prose", "-loose");
+    preview.style.color="#cde";
+    preview.style.display="none";
+    preview.style['padding-left'] = "10px";
+    preview.style["border-left"] = "1px #9ab solid";
+    preview.style["margin-bottom"] = "15px";
+    if(text_area != null){
+        preview.innerHtml = text_area.value;
+    }
+    return preview;
+}
+
+function populatePreviewArea(){
+    if(preview_area==null){
+        return;
+    }
+    //break the text into paragraphs and put into preview element
+    var p_separated_text = text_area.value.split("\n\n");
+    var inner_html = "";
+    p_separated_text.forEach(str => {
+        if(str.length > 0){
+            inner_html = inner_html.concat("<p>"+str+"</p>");
+        }
+    });
+    preview_area.innerHTML = inner_html;
+    
+}
 
 
+function addListenerWrap(container,selector, valueStart, valueEnd, valueInner){
+    container.querySelector(selector).addEventListener('mousedown', function(event) {
+        event.preventDefault();
+    });
+    container.querySelector(selector).addEventListener('click', function(event) {
+        event.preventDefault();
+        insertTag(valueStart,valueEnd, valueInner);
+    });
+}
 
 const cboxCallback = () => {
+    cbox_wrapper.querySelector('#cboxContent').style.height= "";
     text_area = cbox_wrapper.querySelector('#frm-review');
     var markup_row = cbox_wrapper.querySelector('#frmt-row');
     if((!text_area) || (markup_row)){
         return;
     }
-    var review_row = text_area.closest('.form-row');
-    var fieldset = review_row.closest('fieldset');
+    var form_row = (text_area.closest('.form-row')||text_area.closest('.row'));
+    var fieldset = form_row.closest('fieldset');
 
     text_area.parentElement.style['margin-bottom'] = "5px";
 
     //add format buttons
 
-    review_row.insertAdjacentHTML('afterend', format_row_html);
+    form_row.insertAdjacentHTML('afterend', format_row_html);
 
     
 
     //add button listeners
-    function addListenerWrap(selector, valueStart, valueEnd, valueInner){
-        cbox_wrapper.querySelector(selector).addEventListener('mousedown', function(event) {
-            event.preventDefault();
-        });
-        cbox_wrapper.querySelector(selector).addEventListener('click', function(event) {
-            event.preventDefault();
-            insertTag(valueStart,valueEnd, valueInner);
-        });
-    }
+    
     //bold
-    addListenerWrap('#frmt-bold',...tags.bold);
+    addListenerWrap(cbox_wrapper, '#frmt-bold',...tags.bold);
     //italic
-    addListenerWrap('#frmt-italic',...tags.italic);
+    addListenerWrap(cbox_wrapper, '#frmt-italic',...tags.italic);
     //quote
-    addListenerWrap('#frmt-quote',...tags.quote);
+    addListenerWrap(cbox_wrapper, '#frmt-quote',...tags.quote);
 
     //link
     cbox_wrapper.querySelector('#frmt-link').addEventListener('mousedown', function(event) {
@@ -137,66 +165,60 @@ const cboxCallback = () => {
         event.preventDefault();
         insertHyperlink();
     });
-    //add preview
-    const preview = document.createElement('div');
-    preview.classList.add( "review", "body-text", "-prose", "-loose");
-    preview.style.color="#cde";
-    preview.style.display="none";
-    preview.style['padding-left'] = "10px";
-    preview.style["border-left"] = "1px #9ab solid";
-    preview.style["margin-bottom"] = "15px";
-    preview.innerHtml = text_area.value;
 
-    fieldset.insertAdjacentElement('afterbegin', preview);
+    //add preview
+    preview_area = createPreviewArea();
+
+    fieldset.insertAdjacentElement('afterbegin', preview_area);
+
+    
 
     //add preview button
-    fieldset?.lastElementChild?.lastElementChild?.lastElementChild?.insertAdjacentHTML('afterend', '<a href="#" id="frmt-preview" class="button" style="">preview</a>');
-
+    (fieldset.querySelector('.button-delete') || fieldset.querySelector('.button-cancel')).parentElement.insertAdjacentHTML('beforeend', '<a href="#" id="frmt-preview" class="button right" style="">preview</a>');
     var preview_btn = fieldset.querySelector('#frmt-preview');
+
+    //mark all rows that will be hidden when showing prview
+
+    for(let i=0; i<fieldset.children.length-1; i++){
+        var el = fieldset.children[i];
+        if(!el.querySelector('#frmt-preview')){
+            el.classList.add('nonpreview');
+        }
+    }
+
 
     preview_btn.addEventListener('mousedown', function(event) {
         event.preventDefault();
     });
     preview_btn.addEventListener('click', function(event) {
         event.preventDefault();
-        if(preview==null){
-            return;
-        }
-
-        //break the text into paragraphs and put into preview element
-        var p_separated_text = text_area.value.split("\n\n");
-
-        var inner_html = "";
-        p_separated_text.forEach(str => {
-            if(str.length > 0){
-                inner_html = inner_html.concat("<p>"+str+"</p>");
-            }
-        });
-        preview.innerHTML = inner_html;
+        populatePreviewArea();
         var h = 0;
-        for(let i=0; i<fieldset.children.length-1; i++){
-            var el = fieldset.children[i];
+
+
+        var nonpreview = fieldset.querySelectorAll('.nonpreview');
+        nonpreview.forEach((el) => {
             if (el.style.display === "none") {
                 el.style.display = "block";
               } else {
                 h+= el.offsetHeight;
                 el.style.display = "none";
               }
-        }
-        preview.style['min-height'] = h.toString() + "px";
+        });
 
+        preview_area.style['min-height'] = h.toString() + "px";
         if (preview_btn.innerHTML=='preview'){
             preview_btn.innerHTML = 'edit';
-
         }
         else{
             preview_btn.innerHTML = 'preview';
         }
     });
 
-    //this makes the page reconfigure the modal size to account for the added elements:
-    fieldset.style.display = "none";
-    fieldset.style.display = "block";
+    //prevent scroll overflow
+    cbox_wrapper.querySelector('#cboxLoadedContent').style.height = "";
+    fieldset.closest('section').style.display = "none";
+    fieldset.closest('section').style.display = "block";
     
 };
 
