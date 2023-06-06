@@ -1,4 +1,4 @@
-##Shortcuts
+## Shortcuts
 - Bold: (Cmd/Ctrl) + b
 - Italic: (Cmd/Ctr;) + i
 - Hyperlink: (Cmd/Ctrl) + k
