@@ -1,5 +1,5 @@
 ## Shortcuts
 - Bold: (Cmd/Ctrl) + b
-- Italic: (Cmd/Ctr;) + i
+- Italic: (Cmd/Ctrl) + i
 - Hyperlink: (Cmd/Ctrl) + k
 - Quote: (Cmd/Ctrl) + Shift + .

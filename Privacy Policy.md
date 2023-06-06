@@ -4,7 +4,7 @@
 By using this extension, you agree to the access and use of the data as described in this policy.
 
 ## Data access
-To perform its stated function, the extension must access the form data on the Letterboxd review page.
+To perform its stated function, the extension must access the form data on Letterboxd reviews and notes.
 
 ## Data usage
 The form data is used in the following ways
