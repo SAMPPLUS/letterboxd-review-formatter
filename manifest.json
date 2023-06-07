@@ -11,12 +11,12 @@
     "content_scripts": [
         {
             "js": ["scripts/content.js"],
-            "matches": ["https://*.letterboxd.com/*"]
+            "matches": ["https://*.letterboxd.com/film/*", "https://*.letterboxd.com/*/list/*"]
                 }   
     ],
     "web_accessible_resources": [
         {
-            "resources": ["resources/format-row.html", "resources/content-section.html"],
+            "resources": ["resources/format-row.html"],
             "matches": ["https://*.letterboxd.com/*"]
         }
     ]
