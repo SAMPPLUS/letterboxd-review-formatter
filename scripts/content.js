@@ -174,7 +174,7 @@ const cboxCallback = () => {
     
 
     //add preview button
-    (fieldset.querySelector('.button-delete') || fieldset.querySelector('.button-cancel')).parentElement.insertAdjacentHTML('beforeend', '<a href="#" id="frmt-preview" class="button right" style="">preview</a>');
+    (fieldset.querySelector('.button-delete') || fieldset.querySelector('.button-cancel')).parentElement.insertAdjacentHTML('beforeend', '<a href="#" id="frmt-preview" aria-label="preview" class="button right" style="">preview</a>');
     var preview_btn = fieldset.querySelector('#frmt-preview');
 
     //mark all rows that will be hidden when showing prview
