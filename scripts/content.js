@@ -4,6 +4,7 @@ const tags = {
     italic: ["<i>", "</i>", "italic"],
     quote: ["<blockquote>", "</blockquote>", "quote"]
 }
+
 var format_row_html = "";
 
 var text_area = null;
@@ -20,14 +21,20 @@ function insertTagAtRange(valueStart, valueEnd){
     }
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
 
-    if(valueEnd){
-        text_area.setRangeText(valueEnd, end, end, 'preserve' );
+    if(start==end){
+        return;
     }
-    if(valueStart){
-        text_area.setRangeText(valueStart, start, start, 'preserve');
-    }
-    text_area.selectionStart += valueStart.length;
-    text_area.focus();
+
+    var inner_txt = text_area.value.substring(start, end);
+    try {
+        document.execCommand("delete", false, "")
+        document.execCommand("insertText", false, valueStart+inner_txt+valueEnd);
+    } catch (error) {
+        //in case of execCommand deprecation (this does not allow ctrl+z undo)
+        text_area.setRangeText("", start, end, 'end' );
+        text_area.setRangeText(valueStart+inner_txt+valueEnd, start, end, 'end');
+      }
+
 };
 
 
@@ -35,6 +42,7 @@ function insertTag(valueStart, valueEnd, valueInner) {
     if(text_area==null){
         return;
     }
+    text_area.focus();
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
 
     if (start != end){
@@ -42,17 +50,16 @@ function insertTag(valueStart, valueEnd, valueInner) {
         return;
     }
 
-    if(valueStart){
-        text_area.setRangeText(valueStart, start, start, 'end');
+    try {
+        document.execCommand("insertText", false, valueStart+valueInner+valueEnd);
     }
-    start = text_area.selectionStart;
-    if(valueEnd){
-        text_area.setRangeText(valueEnd, start, start, 'start' );
+    catch (error) {
+        //in case of execCommand deprecation (this does not allow ctrl+z undo)
+        text_area.setRangeText(valueStart+valueInner+valueEnd, start, end, 'end');
     }
-    if(valueInner){
-        text_area.setRangeText(valueInner, start, start, 'select');
-    }
-    text_area.focus();
+
+    text_area.selectionStart -= (valueEnd.length+valueInner.length);
+    text_area.selectionEnd -= (valueEnd.length);
 
 };
 
@@ -60,6 +67,8 @@ function insertHyperlink(){
     if(text_area == null){
         return;
     }
+    text_area.focus();
+
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
     var linkUrl = window.prompt("Enter the URL:");
 
@@ -69,24 +78,33 @@ function insertHyperlink(){
     else if(linkUrl==null){
         return;
     }
-
     if (start==end){
         var linkText = window.prompt("Enter the link text:");
     }
     else{
         var linkText = text_area.value.substring(start, end);
+        try{
+            document.execCommand("delete", false, "");
+        }
+        catch(error){
+            text_area.setRangeText("", start, end, 'end');
+        }
     }
-
     if (linkText==""){
         linkText = 'link text goes here';
     }
     else if(linkText==null){
         return;
     }
-
     var tag = `<a href="${linkUrl}">${linkText}</a>`;
-    text_area.setRangeText(tag, start, end, 'end');
-    text_area.focus();
+    try{
+        document.execCommand("insertText", false, tag);
+    }
+    catch(error){
+        //in case of execCommand deprecation (this does not allow ctrl+z undo)
+        text_area.setRangeText(tag, start, end, 'end');
+    }
+
 };
 
 function createPreviewArea(){
