@@ -35,11 +35,11 @@ function updateModal(){
 
     //add button listeners
     //bold
-    addButtonListener(cbox_wrapper, '#frmt-bold',...TAGS.bold);
+    addButtonListener(cbox_wrapper, SELECTORS.bold,...TAGS.bold);
     //italic
-    addButtonListener(cbox_wrapper, '#frmt-italic',...TAGS.italic);
+    addButtonListener(cbox_wrapper, SELECTORS.italic,...TAGS.italic);
     //quote
-    addButtonListener(cbox_wrapper, '#frmt-quote',...TAGS.quote);
+    addButtonListener(cbox_wrapper, SELECTORS.quote,...TAGS.quote);
 
     //link
     addHyperlinkButtonListener(cbox_wrapper);

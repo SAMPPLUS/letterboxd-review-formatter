@@ -145,7 +145,7 @@ function addKeyboardShortcuts(){
 }
 
 function populatePreviewArea(){
-    if((preview_area==null) || text_area==null){
+    if((preview_area==null) || text_area==null || text_area.value == ""){
         return;
     }
     //break the text into paragraphs and put into preview element
