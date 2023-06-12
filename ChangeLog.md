@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.2.1
+- reduced file size
+
 ## 0.2.0
 - support for the profile bio
 - renamed to "Letterboxd Text Formatter"
