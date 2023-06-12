@@ -88,12 +88,14 @@ function updateModal(){
     });
     //prevent scroll overflow
     cbox_wrapper.querySelector('#cboxLoadedContent').style.height = "";
-    fieldset.closest('section').style.display = "none";
-    fieldset.closest('section').style.display = "block";
+    //fieldset.closest('section').style.display = "none";
+    //fieldset.closest('section').style.display = "block";
 }
 
 const cboxCallback = () => {
     cbox_wrapper.querySelector('#cboxContent').style.height= "";
+    cbox_wrapper.querySelector('#cboxLoadedContent').style.height = "";
+
     text_area = cbox_wrapper.querySelector('#frm-review');
     var format_row = cbox_wrapper.querySelector('#frmt-row');
     if((!text_area) || (format_row)){
