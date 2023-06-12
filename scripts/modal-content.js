@@ -83,6 +83,8 @@ function updateModal(){
 
 const cboxCallback = () => {
     cbox_wrapper.querySelector('#cboxContent').style.height= "";
+    cbox_wrapper.querySelector('#cboxLoadedContent').style.height = "";
+
     modal_text_area = cbox_wrapper.querySelector('#frm-review');
     var format_row = cbox_wrapper.querySelector('#frmt-row');
     if((!modal_text_area) || (format_row)){
