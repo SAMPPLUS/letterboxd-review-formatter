@@ -35,7 +35,7 @@ function buildFormatButton(id, label, icon_url){
     btn.id=id;
     btn.ariaLabel = label;
     btn.style.padding = "2px 7px";
-    btn.charlie = "delta";
+    btn.dataset.title = "heeloooooo worldddd";
 
     return btn;
 }
@@ -74,11 +74,8 @@ function insertTagAtRange(valueStart, valueEnd){
 
 };
 
-function insertTag(valueStart, valueEnd, valueInner) {
-    if(text_areas.has(document.activeElement)){
-        var text_area = document.activeElement;
-    }
-    else{
+function insertTag(valueStart, valueEnd, valueInner, text_area) {
+    if(!text_area){
         return;
     }
     text_area.focus();
@@ -102,7 +99,7 @@ function insertTag(valueStart, valueEnd, valueInner) {
 
 };
 
-function insertHyperlink(){
+function insertHyperlink(text_area){
     if(text_area == null){
         return;
     }
@@ -146,57 +143,61 @@ function insertHyperlink(){
 
 };
 
-function addHyperlinkButtonListener(container){
+function addHyperlinkButtonListener(container, text_area){
     container.querySelector("#" + SELECTORS.link).addEventListener('mousedown', function(event) {
         event.preventDefault();
     });
     container.querySelector("#" + SELECTORS.link).addEventListener('click', function(event) {
         event.preventDefault();
-        insertHyperlink();
+        insertHyperlink(text_area);
     });
 }
 
-function addButtonListener(container,selector, valueStart, valueEnd, valueInner){
+function addButtonListener(container,selector, valueStart, valueEnd, valueInner, text_area){
     let btn = container.querySelector("#" + selector);
     btn.addEventListener('mousedown', function(event) {
         event.preventDefault();
     });
     btn.addEventListener('click', function(event) {
         event.preventDefault();
-        insertTag(valueStart,valueEnd, valueInner);
+        insertTag(valueStart,valueEnd, valueInner, text_area);
     });
 }
 
-function addFormatButtonsListeners(container, types){
+function addFormatButtonsListeners(container, types, text_area){
     types.forEach(type => {
-        addButtonListener(container, SELECTORS[type], ...TAGS[type]);
+        addButtonListener(container, SELECTORS[type], ...TAGS[type], text_area);
     });
 }
 
 
 function addKeyboardShortcuts(){
     document.addEventListener('keydown', function(e){
+        var text_area = document.activeElement;
+        if(!text_areas.has(text_area)){
+            return;
+        }
         if (e.key == 'b' && (e.ctrlKey || e.metaKey)){
-            insertTag(...TAGS.bold);
+            insertTag(...TAGS.bold, text_area);
         }
         else if (e.key == 'i' && (e.ctrlKey || e.metaKey)){
-            insertTag(...TAGS.italic);
+            insertTag(...TAGS.italic, text_area);
         }
         else if (e.key == '.' && e.shiftKey && (e.ctrlKey || e.metaKey)){
-            insertTag(...TAGS.quote);
+            insertTag(...TAGS.quote, text_area);
         }
         else if (e.key == 'k' && (e.ctrlKey || e.metaKey)){
-            insertHyperlink();
+            insertHyperlink(text_area);
         }
     });
 }
 
 function populatePreviewArea(){
-    if((preview_area==null) || text_area==null || text_area.value == ""){
+    if((preview_area==null) || settings_text_area==null || settings_text_area.value == ""){
         return;
     }
     //break the text into paragraphs and put into preview element
-    var p_separated_text = text_area.value.split("\n\n");
+    var p_separated_text = settings_text_area.value.split("\n\n");
     var inner_html = "";
     p_separated_text.forEach(str => {
         if(str.length > 0){

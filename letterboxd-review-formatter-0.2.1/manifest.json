@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Letterboxd Text Formatter",
+    "version": "0.2.1",
+    "description": "A simple interface for formatting Letterboxd text.",
+    "icons": {
+        "16": "images/icon-16.png",
+        "48": "images/icon-48.png",
+        "128": "images/icon-128.png"
+    },
+    "content_scripts": [
+        {
+            "js": ["scripts/formatting.js","scripts/modal-content.js"],
+            "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/list/*"]
+        },
+        {
+            "js": ["scripts/formatting.js", "scripts/settings-content.js"],
+            "matches": ["https://*.letterboxd.com/settings/"]
+        }   
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["resources/format-row.html"],
+            "matches": ["https://*.letterboxd.com/*"]
+        }
+    ]
+}

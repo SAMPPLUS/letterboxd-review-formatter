@@ -73,8 +73,8 @@ function updateModal(){
         }
     });
     //add button listeners
-    addFormatButtonsListeners(cbox_wrapper, ['bold','italic','quote']);
-    addHyperlinkButtonListener(cbox_wrapper);
+    addFormatButtonsListeners(cbox_wrapper, ['bold','italic','quote'], modal_text_area);
+    addHyperlinkButtonListener(cbox_wrapper, modal_text_area);
     //prevent scroll overflow
     cbox_wrapper.querySelector('#cboxLoadedContent').style.height = "";
     fieldset.closest('section').style.display = "none";
