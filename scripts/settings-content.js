@@ -23,7 +23,7 @@ function settingsPopulatePreview(){
         return;
     }
     preview_area.parentElement.style.display="";
-    populatePreviewArea();
+    populatePreviewArea(settings_text_area);
 }
 
 function insertElements(){

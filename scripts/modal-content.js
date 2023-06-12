@@ -51,7 +51,7 @@ function updateModal(){
     });
     preview_btn.addEventListener('click', function(event) {
         event.preventDefault();
-        populatePreviewArea();
+        populatePreviewArea(modal_text_area);
         var h = 0;
 
         var nonpreview = fieldset.querySelectorAll('.nonpreview');

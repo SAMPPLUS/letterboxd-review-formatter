@@ -34,7 +34,8 @@ function buildFormatButton(id, label, icon_url){
     btn.href="#";
     btn.id=id;
     btn.ariaLabel = label;
-    btn.style.padding = "2px 7px";
+    btn.style.padding = "1px 7px";
+    btn.style['margin-right'] = "3px"
     btn.dataset.title = "heeloooooo worldddd";
 
     return btn;
@@ -192,12 +193,12 @@ function addKeyboardShortcuts(){
     });
 }
 
-function populatePreviewArea(){
-    if((preview_area==null) || settings_text_area==null || settings_text_area.value == ""){
+function populatePreviewArea(text_area){
+    if((preview_area==null) || text_area==null || text_area.value == ""){
         return;
     }
     //break the text into paragraphs and put into preview element
-    var p_separated_text = settings_text_area.value.split("\n\n");
+    var p_separated_text = text_area.value.split("\n\n");
     var inner_html = "";
     p_separated_text.forEach(str => {
         if(str.length > 0){

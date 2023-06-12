@@ -11,12 +11,16 @@
     "content_scripts": [
         {
             "js": ["scripts/formatting.js","scripts/modal-content.js", "scripts/comment-content.js"],
-            "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/list/*"]
+            "matches": ["https://*.letterboxd.com/*film/*"]
         },
         {
             "js": ["scripts/formatting.js", "scripts/settings-content.js"],
             "matches": ["https://*.letterboxd.com/settings/"]
-        }   
+        },
+        {
+            "js": ["scripts/formatting.js","scripts/modal-content.js","scripts/list-content.js", "scripts/comment-content.js"],
+            "matches": ["https://*.letterboxd.com/*/list/*"]
+        }
     ],
     "web_accessible_resources": [
         {
