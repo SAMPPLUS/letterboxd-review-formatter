@@ -1,11 +1,6 @@
-var format_row_html = "";
+var modal_text_area = null;
+var modal_frmt_row = buildFormatRow();
 
-var text_area = null;
-var preview_area = null;
-
-fetch(chrome.runtime.getURL('/resources/format-row.html')).then(r => r.text()).then(html => {
-    format_row_html = html;
-  });
 
 
 function createPreviewArea(){
@@ -16,8 +11,8 @@ function createPreviewArea(){
     preview.style['padding-left'] = "10px";
     preview.style["border-left"] = "1px #9ab solid";
     preview.style["margin-bottom"] = "15px";
-    if(text_area != null){
-        preview.innerHtml = text_area.value;
+    if(modal_text_area != null){
+        preview.innerHtml = modal_text_area.value;
     }
     return preview;
 }
@@ -25,24 +20,15 @@ function createPreviewArea(){
 
 
 function updateModal(){
-    var form_row = (text_area.closest('.form-row')||text_area.closest('.row'));
+    var form_row = (modal_text_area.closest('.form-row')||modal_text_area.closest('.row'));
     var fieldset = form_row.closest('fieldset');
 
-    text_area.parentElement.style['margin-bottom'] = "5px";
+    modal_text_area.parentElement.style['margin-bottom'] = "5px";
 
     //add format buttons
-    form_row.insertAdjacentHTML('afterend', format_row_html);
+    form_row.insertAdjacentElement('afterend', modal_frmt_row);
 
-    //add button listeners
-    //bold
-    addButtonListener(cbox_wrapper, SELECTORS.bold,...TAGS.bold);
-    //italic
-    addButtonListener(cbox_wrapper, SELECTORS.italic,...TAGS.italic);
-    //quote
-    addButtonListener(cbox_wrapper, SELECTORS.quote,...TAGS.quote);
-
-    //link
-    addHyperlinkButtonListener(cbox_wrapper);
+    
 
     //add preview
     preview_area = createPreviewArea();
@@ -86,6 +72,9 @@ function updateModal(){
             preview_btn.innerHTML = 'preview';
         }
     });
+    //add button listeners
+    addFormatButtonsListeners(cbox_wrapper, ['bold','italic','quote']);
+    addHyperlinkButtonListener(cbox_wrapper);
     //prevent scroll overflow
     cbox_wrapper.querySelector('#cboxLoadedContent').style.height = "";
     fieldset.closest('section').style.display = "none";
@@ -94,16 +83,17 @@ function updateModal(){
 
 const cboxCallback = () => {
     cbox_wrapper.querySelector('#cboxContent').style.height= "";
-    text_area = cbox_wrapper.querySelector('#frm-review');
+    modal_text_area = cbox_wrapper.querySelector('#frm-review');
     var format_row = cbox_wrapper.querySelector('#frmt-row');
-    if((!text_area) || (format_row)){
+    if((!modal_text_area) || (format_row)){
         return;
     }
+    text_areas.add(modal_text_area);
     updateModal();
 };
 
 addKeyboardShortcuts();
 const cbox_wrapper = document.getElementById("cboxWrapper");
-const config = { attributes: true, childList: true, subtree: false };
+var config = { attributes: true, childList: true, subtree: false };
 const cbox_observer = new MutationObserver(cboxCallback);
 cbox_observer.observe(cbox_wrapper, config);

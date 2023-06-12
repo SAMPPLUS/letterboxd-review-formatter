@@ -1,6 +1,4 @@
-var format_row_html = "";
-var text_area = null;
-
+var settings_frmt_row = buildFormatRow();
 
 function createPreviewArea(){
     let preview = document.createElement('div');
@@ -30,7 +28,7 @@ function insertElements(){
     text_area = settings_container.querySelector('textarea');
     console.log(text_area);
     
-    text_area.insertAdjacentHTML('afterend', format_row_html);
+    text_area.insertAdjacentElement('afterend', settings_frmt_row);
     settings_container.querySelector('#frmt-row').style['margin-top'] = "4px";
 
     addFormatButtonsListeners(settings_container, ['bold','italic','quote']);
@@ -58,7 +56,4 @@ fetch(chrome.runtime.getURL('/resources/format-row.html')).then(r => r.text()).t
     format_row_html = html;
     insertElements();
   });
-
-
-var preview_area = null;
 

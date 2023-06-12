@@ -1,8 +1,8 @@
 const SELECTORS = {
-    bold: "#frmt-bold",
-    italic: "#frmt-italic",
-    quote: "#frmt-quote",
-    link: "#frmt-link"
+    bold: "frmt-bold",
+    italic: "frmt-italic",
+    quote: "frmt-quote",
+    link: "frmt-link"
 }
 
 const TAGS = {
@@ -11,8 +11,51 @@ const TAGS = {
     quote: ["<blockquote>", "</blockquote>", "quote"]
 }
 
+const URLS = {
+    bold: "resources/icon-bold.svg",
+    italic: "resources/icon-italic.svg",
+    quote: "resources/icon-quote.svg",
+    link: "resources/icon-link.svg"
+}
+
+const btn_builder = [
+    [SELECTORS.bold, 'bold', URLS.bold],
+    [SELECTORS.italic, 'italic', URLS.italic],
+    [SELECTORS.quote, 'quote', URLS.quote],
+    [SELECTORS.link, 'link', URLS.link]
+]
+
+function buildFormatButton(id, label, icon_url){
+    let btn = document.createElement('a');
+    fetch(chrome.runtime.getURL(icon_url)).then(r=>r.text()).then(html => {
+        btn.insertAdjacentHTML('beforeend', html);
+    });
+    btn.classList.add('button');
+    btn.href="#";
+    btn.id=id;
+    btn.ariaLabel = label;
+    btn.style.padding = "2px 7px";
+    btn.charlie = "delta";
+
+    return btn;
+}
+
+function buildFormatRow(){
+    let frmt_row = document.createElement('div');
+    frmt_row.id = "frmt-row";
+
+    btn_builder.forEach(element => {
+        frmt_row.insertAdjacentElement('beforeend', buildFormatButton(...element));
+    });
+
+    return frmt_row;
+}
+
 function insertTagAtRange(valueStart, valueEnd){
-    if(text_area==null){
+    if(text_areas.has(document.activeElement)){
+        var text_area = document.activeElement;
+    }
+    else{
         return;
     }
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
@@ -32,7 +75,10 @@ function insertTagAtRange(valueStart, valueEnd){
 };
 
 function insertTag(valueStart, valueEnd, valueInner) {
-    if(text_area==null){
+    if(text_areas.has(document.activeElement)){
+        var text_area = document.activeElement;
+    }
+    else{
         return;
     }
     text_area.focus();
@@ -101,20 +147,21 @@ function insertHyperlink(){
 };
 
 function addHyperlinkButtonListener(container){
-    container.querySelector(SELECTORS.link).addEventListener('mousedown', function(event) {
+    container.querySelector("#" + SELECTORS.link).addEventListener('mousedown', function(event) {
         event.preventDefault();
     });
-    container.querySelector(SELECTORS.link).addEventListener('click', function(event) {
+    container.querySelector("#" + SELECTORS.link).addEventListener('click', function(event) {
         event.preventDefault();
         insertHyperlink();
     });
 }
 
 function addButtonListener(container,selector, valueStart, valueEnd, valueInner){
-    container.querySelector(selector).addEventListener('mousedown', function(event) {
+    let btn = container.querySelector("#" + selector);
+    btn.addEventListener('mousedown', function(event) {
         event.preventDefault();
     });
-    container.querySelector(selector).addEventListener('click', function(event) {
+    btn.addEventListener('click', function(event) {
         event.preventDefault();
         insertTag(valueStart,valueEnd, valueInner);
     });
@@ -159,3 +206,6 @@ function populatePreviewArea(){
     preview_area.innerHTML = inner_html;
     
 };
+
+var text_areas = new Set();
+var preview_area = null;

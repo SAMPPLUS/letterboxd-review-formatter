@@ -10,7 +10,7 @@
     },
     "content_scripts": [
         {
-            "js": ["scripts/formatting.js","scripts/modal-content.js"],
+            "js": ["scripts/formatting.js","scripts/modal-content.js", "scripts/comment-content.js"],
             "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/list/*"]
         },
         {
@@ -20,7 +20,7 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": ["resources/format-row.html"],
+            "resources": ["resources/format-row.html", "resources/icon-bold.svg", "resources/icon-italic.svg", "resources/icon-quote.svg", "resources/icon-link.svg"],
             "matches": ["https://*.letterboxd.com/*"]
         }
     ]
