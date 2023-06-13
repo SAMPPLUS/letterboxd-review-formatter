@@ -175,19 +175,19 @@ function addFormatButtonsListeners(container, types, text_area){
 function addKeyboardShortcuts(){
     document.addEventListener('keydown', function(e){
         var text_area = document.activeElement;
-        if(!text_areas.has(text_area)){
+        if(!text_areas.has(text_area) || !e.key){
             return;
         }
-        if (e.key == 'b' && (e.ctrlKey || e.metaKey)){
+        if (e.key.toLowerCase() == 'b' && (e.ctrlKey || e.metaKey)){
             insertTag(...TAGS.bold, text_area);
         }
-        else if (e.key == 'i' && (e.ctrlKey || e.metaKey)){
+        else if (e.key.toLowerCase() == 'i' && (e.ctrlKey || e.metaKey)){
             insertTag(...TAGS.italic, text_area);
         }
-        else if (e.key == '.' && e.shiftKey && (e.ctrlKey || e.metaKey)){
+        else if (e.key.toLowerCase() == 'l' && e.shiftKey && (e.ctrlKey || e.metaKey)){
             insertTag(...TAGS.quote, text_area);
         }
-        else if (e.key == 'k' && (e.ctrlKey || e.metaKey)){
+        else if (e.key.toLowerCase() == 'k' && e.shiftKey &&  (e.ctrlKey || e.metaKey)){
             insertHyperlink(text_area);
         }
     });
@@ -211,3 +211,4 @@ function populatePreviewArea(text_area){
 
 var text_areas = new Set();
 var preview_area = null;
+addKeyboardShortcuts();

@@ -35,7 +35,6 @@ function insertElements(){
     addFormatButtonsListeners(settings_container, ['bold','italic','quote'], settings_text_area);
     addHyperlinkButtonListener(settings_container, settings_text_area);
 
-    addKeyboardShortcuts();
 
     let preview= createPreviewArea();
     aside.insertAdjacentElement('beforeend',preview);

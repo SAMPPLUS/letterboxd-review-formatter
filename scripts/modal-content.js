@@ -94,7 +94,6 @@ const cboxCallback = () => {
     updateModal();
 };
 
-addKeyboardShortcuts();
 const cbox_wrapper = document.getElementById("cboxWrapper");
 var config = { attributes: true, childList: true, subtree: false };
 const cbox_observer = new MutationObserver(cboxCallback);

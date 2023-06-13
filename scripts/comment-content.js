@@ -14,6 +14,7 @@ const contentCallback = (mutationList, observer) =>{
     observer.disconnect();
     comment_text_area.insertAdjacentElement('afterend', comment_frmt_row);
     addFormatButtonsListeners(comments_container, ['bold','italic','quote'], comment_text_area);
+    addHyperlinkButtonListener(comments_container, comment_text_area);
 }
 
 

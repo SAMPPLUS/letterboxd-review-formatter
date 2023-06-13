@@ -10,16 +10,24 @@
     },
     "content_scripts": [
         {
-            "js": ["scripts/formatting.js","scripts/modal-content.js", "scripts/comment-content.js"],
-            "matches": ["https://*.letterboxd.com/*film/*"]
+            "js": ["scripts/formatting.js"],
+            "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/","https://*.letterboxd.com/settings/","https://*.letterboxd.com/*/list/*"]
         },
         {
-            "js": ["scripts/formatting.js", "scripts/settings-content.js"],
+            "js": ["scripts/modal-content.js", "scripts/comment-content.js"],
+            "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/"]
+        },
+        {
+            "js": ["scripts/settings-content.js"],
             "matches": ["https://*.letterboxd.com/settings/"]
         },
         {
-            "js": ["scripts/formatting.js","scripts/modal-content.js","scripts/list-content.js", "scripts/comment-content.js"],
+            "js": ["scripts/modal-content.js", "scripts/comment-content.js"],
             "matches": ["https://*.letterboxd.com/*/list/*"]
+        },
+        {
+            "js": ["scripts/list-content.js"],
+            "matches": ["https://*.letterboxd.com/*/list/*/edit/"]
         }
     ],
     "web_accessible_resources": [
