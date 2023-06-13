@@ -184,17 +184,17 @@ function addKeyboardShortcuts(){
         else if (e.key.toLowerCase() == 'i' && (e.ctrlKey || e.metaKey)){
             insertTag(...TAGS.italic, text_area);
         }
-        else if (e.key.toLowerCase() == 'l' && e.shiftKey && (e.ctrlKey || e.metaKey)){
+        else if (e.key.toLowerCase() == 'k' && e.shiftKey && (e.ctrlKey || e.metaKey)){
             insertTag(...TAGS.quote, text_area);
         }
-        else if (e.key.toLowerCase() == 'k' && e.shiftKey &&  (e.ctrlKey || e.metaKey)){
+        else if (e.key.toLowerCase() == 'l' && e.shiftKey &&  (e.ctrlKey || e.metaKey)){
             insertHyperlink(text_area);
         }
     });
 }
 
 function populatePreviewArea(text_area){
-    if((preview_area==null) || text_area==null || text_area.value == ""){
+    if((preview_area==null) || text_area==null){
         return;
     }
     //break the text into paragraphs and put into preview element
