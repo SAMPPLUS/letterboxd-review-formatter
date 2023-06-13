@@ -28,6 +28,7 @@ function settingsPopulatePreview(){
 
 function insertElements(){
     settings_text_area = settings_container.querySelector('textarea');
+    text_areas.add(settings_text_area);
     
     settings_text_area.insertAdjacentElement('afterend', settings_frmt_row);
     settings_container.querySelector('#frmt-row').style['margin-top'] = "4px";
