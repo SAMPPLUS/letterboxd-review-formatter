@@ -1,11 +1,9 @@
-var format_row_html = "";
-
-var text_area = null;
+var modal_text_area = null;
+var modal_frmt_row = buildFormatRow();
+var fieldset = null;
 var preview_area = null;
+var preview_btn = null;
 
-fetch(chrome.runtime.getURL('/resources/format-row.html')).then(r => r.text()).then(html => {
-    format_row_html = html;
-  });
 
 
 function createPreviewArea(){
@@ -16,41 +14,54 @@ function createPreviewArea(){
     preview.style['padding-left'] = "10px";
     preview.style["border-left"] = "1px #9ab solid";
     preview.style["margin-bottom"] = "15px";
-    if(text_area != null){
-        preview.innerHtml = text_area.value;
+    //preview.id="preview-area";
+    if(modal_text_area != null){
+        preview.innerHtml = modal_text_area.value;
     }
     return preview;
 }
 
+function swapPreviewVis(show_prev){
+    if(fieldset == null || preview_area == null || preview_btn==null){
+        return;
+    }
+    if(show_prev === undefined){
+        show_prev = (preview_area.style.display=="none");
+    }
+    var h = 0;
+    var nonpreview = fieldset.querySelectorAll('.nonpreview');
+    nonpreview.forEach((el) => {
+        if (!show_prev) {
+            el.style.display = "block";
+          } else {
+            h+= el.offsetHeight;
+            el.style.display = "none";
+          }
+    });
+    if (show_prev){
+        preview_area.style.display = "block";
+    }
+    else{
+        preview_area.style.display = "none";
+    }
+    preview_area.style['min-height'] = h.toString() + "px";
+    if (show_prev){
+        preview_btn.innerHTML = 'edit';
+    }
+    else{
+        preview_btn.innerHTML = 'preview';
+    }
+}
 
 
 function updateModal(){
-    var form_row = (text_area.closest('.form-row')||text_area.closest('.row'));
-    var fieldset = form_row.closest('fieldset');
+    var form_row = (modal_text_area.closest('.form-row')||modal_text_area.closest('.row'));
+    fieldset = form_row.closest('fieldset');
 
-    text_area.parentElement.style['margin-bottom'] = "5px";
+    modal_text_area.parentElement.style['margin-bottom'] = "5px";
 
     //add format buttons
-    form_row.insertAdjacentHTML('afterend', format_row_html);
-
-    //add button listeners
-    //bold
-    addButtonListener(cbox_wrapper, SELECTORS.bold,...TAGS.bold);
-    //italic
-    addButtonListener(cbox_wrapper, SELECTORS.italic,...TAGS.italic);
-    //quote
-    addButtonListener(cbox_wrapper, SELECTORS.quote,...TAGS.quote);
-
-    //link
-    addHyperlinkButtonListener(cbox_wrapper);
-
-    //add preview
-    preview_area = createPreviewArea();
-    fieldset.insertAdjacentElement('afterbegin', preview_area);
-
-    //add preview button
-    (fieldset.querySelector('.button-delete') || fieldset.querySelector('.button-cancel')).parentElement.insertAdjacentHTML('beforeend', '<a href="#" id="frmt-preview" aria-label="preview" class="button right" style="">preview</a>');
-    var preview_btn = fieldset.querySelector('#frmt-preview');
+    form_row.insertAdjacentElement('afterend', modal_frmt_row);
 
     //mark all rows that will be hidden when showing prview
     for(let i=0; i<fieldset.children.length-1; i++){
@@ -59,33 +70,26 @@ function updateModal(){
             el.classList.add('nonpreview');
         }
     }
+    //add preview
+    preview_area = createPreviewArea();
+    fieldset.insertAdjacentElement('afterbegin', preview_area);
+
+    //add preview button
+    (fieldset.querySelector('.button-delete') || fieldset.querySelector('.button-cancel')).parentElement.insertAdjacentHTML('beforeend', '<a href="#" id="frmt-preview" aria-label="preview" class="button right" style="">preview</a>');
+    preview_btn = fieldset.querySelector('#frmt-preview');
+
 
     preview_btn.addEventListener('mousedown', function(event) {
         event.preventDefault();
     });
     preview_btn.addEventListener('click', function(event) {
         event.preventDefault();
-        populatePreviewArea();
-        var h = 0;
-
-        var nonpreview = fieldset.querySelectorAll('.nonpreview');
-        nonpreview.forEach((el) => {
-            if (el.style.display === "none") {
-                el.style.display = "block";
-              } else {
-                h+= el.offsetHeight;
-                el.style.display = "none";
-              }
-        });
-
-        preview_area.style['min-height'] = h.toString() + "px";
-        if (preview_btn.innerHTML=='preview'){
-            preview_btn.innerHTML = 'edit';
-        }
-        else{
-            preview_btn.innerHTML = 'preview';
-        }
+        populatePreviewArea(modal_text_area);
+        swapPreviewVis();
     });
+    //add button listeners
+    addFormatButtonsListeners(cbox_wrapper, ['bold','italic','quote'], modal_text_area);
+    addHyperlinkButtonListener(cbox_wrapper, modal_text_area);
     //prevent scroll overflow
     cbox_wrapper.querySelector('#cboxLoadedContent').style.height = "";
     fieldset.closest('section').style.display = "none";
@@ -94,16 +98,22 @@ function updateModal(){
 
 const cboxCallback = () => {
     cbox_wrapper.querySelector('#cboxContent').style.height= "";
-    text_area = cbox_wrapper.querySelector('#frm-review');
+    cbox_wrapper.querySelector('#cboxLoadedContent').style.height = "";
+
+    modal_text_area = cbox_wrapper.querySelector('#frm-review');
     var format_row = cbox_wrapper.querySelector('#frmt-row');
-    if((!text_area) || (format_row)){
+    if(format_row){
+        swapPreviewVis(false);
         return;
     }
+    if(!modal_text_area){
+        return;
+    }
+    text_areas.add(modal_text_area);
     updateModal();
 };
 
-addKeyboardShortcuts();
 const cbox_wrapper = document.getElementById("cboxWrapper");
-const config = { attributes: true, childList: true, subtree: false };
+var config = { attributes: true, childList: true, subtree: false };
 const cbox_observer = new MutationObserver(cboxCallback);
 cbox_observer.observe(cbox_wrapper, config);
