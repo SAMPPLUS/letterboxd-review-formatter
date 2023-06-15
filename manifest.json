@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Letterboxd Text Formatter",
-    "version": "0.3.0",
+    "version": "0.3.5",
     "description": "A simple interface for formatting Letterboxd text.",
     "icons": {
         "16": "images/icon-16.png",
@@ -15,15 +15,12 @@
         },
         {
             "js": ["scripts/modal-content.js", "scripts/comment-content.js"],
-            "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/"]
+            "css": ["modal.css"],
+            "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/","https://*.letterboxd.com/*/list/*"]
         },
         {
             "js": ["scripts/settings-content.js"],
             "matches": ["https://*.letterboxd.com/settings/"]
-        },
-        {
-            "js": ["scripts/modal-content.js", "scripts/comment-content.js"],
-            "matches": ["https://*.letterboxd.com/*/list/*"]
         },
         {
             "js": ["scripts/list-content.js"],

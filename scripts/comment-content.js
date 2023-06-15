@@ -10,11 +10,11 @@ const contentCallback = (mutationList, observer) =>{
     if(!comment_text_area){
         return;
     }
-    text_areas.add(comment_text_area);
     observer.disconnect();
-    comment_text_area.insertAdjacentElement('afterend', comment_frmt_row);
-    addFormatButtonsListeners(comments_container, ['bold','italic','quote'], comment_text_area);
-    addHyperlinkButtonListener(comments_container, comment_text_area);
+    let format_row = insertFormatRow(comment_text_area);
+    let [preview_area, preview_btn] = buildPreviewArea(comment_text_area, ['body-text', '-small']);
+    format_row.insertAdjacentElement('beforeend', preview_btn);
+    comment_text_area.insertAdjacentElement('beforebegin', preview_area);
 }
 
 

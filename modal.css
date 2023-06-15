@@ -1,0 +1,12 @@
+#colorbox, #cboxWrapper, #cboxContent, #cboxLoadedContent{
+    overflow: visible !important;
+    height: fit-content !important;
+}
+#cboxLoadedContent {
+    overflow: scroll !important;
+    height: fit-content !important;
+}
+
+textarea#frm-review {
+    max-height: 45vh;
+}
