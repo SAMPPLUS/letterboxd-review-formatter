@@ -1,0 +1,16 @@
+#colorbox {
+    overflow: visible !important;
+}
+
+#cboxWrapper, #cboxContent, #cboxLoadedContent{
+    overflow: visible !important;
+    height: fit-content !important;
+}
+#cboxLoadedContent {
+    overflow: auto !important;
+    height: fit-content !important;
+}
+
+textarea#frm-review {
+    resize: vertical !important;
+}

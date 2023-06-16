@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
     "name": "Letterboxd Text Formatter",
-    "version": "0.3.0",
-    "description": "A simple interface for formatting Letterboxd text.",
+    "version": "0.4.0",
+    "description": "A simple interface for formatting Letterboxd reviews, comments, and more.",
     "icons": {
         "16": "images/icon-16.png",
         "48": "images/icon-48.png",
@@ -15,25 +15,16 @@
         },
         {
             "js": ["scripts/modal-content.js", "scripts/comment-content.js"],
-            "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/"]
+            "css": ["modal.css"],
+            "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/","https://*.letterboxd.com/*/list/*"]
         },
         {
             "js": ["scripts/settings-content.js"],
             "matches": ["https://*.letterboxd.com/settings/"]
         },
         {
-            "js": ["scripts/modal-content.js", "scripts/comment-content.js"],
-            "matches": ["https://*.letterboxd.com/*/list/*"]
-        },
-        {
             "js": ["scripts/list-content.js"],
             "matches": ["https://*.letterboxd.com/*/list/*/edit/"]
-        }
-    ],
-    "web_accessible_resources": [
-        {
-            "resources": ["resources/format-row.html", "resources/icon-bold.svg", "resources/icon-italic.svg", "resources/icon-quote.svg", "resources/icon-link.svg"],
-            "matches": ["https://*.letterboxd.com/*"]
         }
     ]
 }
