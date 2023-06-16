@@ -27,12 +27,15 @@ function updateModal(){
     //add preview
     let [preview_area, preview_btn] = buildPreviewArea(modal_text_area, ["review", "body-text", "-prose", "-loose"]);
     modal_text_area.insertAdjacentElement('beforebegin', preview_area); 
-    frmt_row.insertAdjacentElement('beforeend', preview_btn);   
+    frmt_row.insertAdjacentElement('beforeend', preview_btn);
+    
+    modal_text_area.style['max-width'] = modal_text_area.style.width;
 
 }
 
 const cboxCallback = () => {
-
+    console.log(colorbox.style.height);
+    colorbox.style['min-height'] = colorbox.style.height;
     modal_text_area = colorbox.querySelector('#frm-review');
     var format_row = colorbox.querySelector('#frmt-row');
     if(!modal_text_area|| format_row){

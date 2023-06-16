@@ -243,8 +243,8 @@ function buildPreviewArea(text_area, classList=[]){
     preview.style.display="none";
     preview.style['padding-left'] = "10px";
     preview.style["border-left"] = "1px #9ab solid";
-    preview.style.overflow = "scroll";
-    preview.style.resize = "both";
+    preview.style.overflow = "auto";
+    preview.style.resize = "vertical";
     text_area.insertAdjacentElement('beforebegin', preview)
     //
     prv_btn.addEventListener('mousedown', function(event){
