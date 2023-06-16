@@ -1,4 +1,8 @@
 # Change Log
+
+## 0.4.0
+- made styling and layout more consistant across different text areas
+- performance improvements
 ## 0.3.0
 - added support for comments, list descriptions, and reviews accessed via the "Diary" page
 - changed default keyboard shortcuts
