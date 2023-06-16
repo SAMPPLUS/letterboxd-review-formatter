@@ -239,7 +239,7 @@ function buildPreviewArea(text_area, classList=[]){
     // add preview area
     var preview = document.createElement('div');
     preview.classList.add( ...classList);
-    preview.style.color="#cde";
+    preview.style.color="#9abs";
     preview.style.display="none";
     preview.style['padding-left'] = "10px";
     preview.style["border-left"] = "1px #9ab solid";

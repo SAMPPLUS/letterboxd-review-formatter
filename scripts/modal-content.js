@@ -22,6 +22,7 @@ function updateModal(){
 
     //add preview
     [modal_preview_area, modal_preview_btn] = buildPreviewArea(modal_text_area, ["review", "body-text", "-prose", "-loose"]);
+    modal_preview_area.style.color = "#cde";
     modal_text_area.insertAdjacentElement('beforebegin', modal_preview_area); 
     frmt_row.insertAdjacentElement('beforeend', modal_preview_btn);
     

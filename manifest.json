@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
     "name": "Letterboxd Text Formatter",
-    "version": "0.3.5",
-    "description": "A simple interface for formatting Letterboxd text.",
+    "version": "0.4.0",
+    "description": "A simple interface for formatting Letterboxd reviews, comments, and more.",
     "icons": {
         "16": "images/icon-16.png",
         "48": "images/icon-48.png",
