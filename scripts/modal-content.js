@@ -1,8 +1,6 @@
 var modal_text_area = null;
-var fieldset = null;
 var modal_preview_area = null;
-var preview_btn = null;
-console.log("hello modal!")
+var modal_preview_btn = null;
 
 
 function settingsBuildPreview(){
@@ -20,24 +18,22 @@ function settingsBuildPreview(){
 
 
 function updateModal(){
-    var form_row = (modal_text_area.closest('.form-row')||modal_text_area.closest('.row'));
-    fieldset = form_row.closest('fieldset');
     let frmt_row = insertFormatRow(modal_text_area);
 
     //add preview
-    let [preview_area, preview_btn] = buildPreviewArea(modal_text_area, ["review", "body-text", "-prose", "-loose"]);
-    modal_text_area.insertAdjacentElement('beforebegin', preview_area); 
-    frmt_row.insertAdjacentElement('beforeend', preview_btn);
+    [modal_preview_area, modal_preview_btn] = buildPreviewArea(modal_text_area, ["review", "body-text", "-prose", "-loose"]);
+    modal_text_area.insertAdjacentElement('beforebegin', modal_preview_area); 
+    frmt_row.insertAdjacentElement('beforeend', modal_preview_btn);
     
     modal_text_area.style['max-width'] = modal_text_area.style.width;
 
 }
 
 const cboxCallback = () => {
-    console.log(colorbox.style.height);
-    colorbox.style['min-height'] = colorbox.style.height;
+    //colorbox.style['min-height'] = colorbox.style.height;
     modal_text_area = colorbox.querySelector('#frm-review');
     var format_row = colorbox.querySelector('#frmt-row');
+    populatePreviewArea(modal_text_area, modal_preview_area);
     if(!modal_text_area|| format_row){
         return;
     }
@@ -46,6 +42,7 @@ const cboxCallback = () => {
 };
 
 const colorbox = document.getElementById("colorbox");
-var config = { attributes: true, childList: true, subtree: false };
+const cboxWrapper = colorbox.querySelector('#cboxWrapper');
+var config = { attributes: true, childList: false, subtree: false };
 const cbox_observer = new MutationObserver(cboxCallback);
-cbox_observer.observe(colorbox, config);
+cbox_observer.observe(cboxWrapper, config);

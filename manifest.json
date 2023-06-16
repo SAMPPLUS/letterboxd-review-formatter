@@ -26,11 +26,5 @@
             "js": ["scripts/list-content.js"],
             "matches": ["https://*.letterboxd.com/*/list/*/edit/"]
         }
-    ],
-    "web_accessible_resources": [
-        {
-            "resources": ["resources/format-row.html", "resources/icon-bold.svg", "resources/icon-italic.svg", "resources/icon-quote.svg", "resources/icon-link.svg"],
-            "matches": ["https://*.letterboxd.com/*"]
-        }
     ]
 }
