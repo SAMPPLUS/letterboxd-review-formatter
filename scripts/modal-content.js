@@ -1,7 +1,7 @@
 var modal_text_area = null;
 var modal_preview_area = null;
 var modal_preview_btn = null;
-
+console.log('modal')
 
 function settingsBuildPreview(){
     let preview = document.createElement('div');
@@ -18,6 +18,7 @@ function settingsBuildPreview(){
 
 
 function updateModal(){
+    modal_text_area.style['margin-bottom'] = '0';
     let frmt_row = insertFormatRow(modal_text_area);
 
     //add preview
@@ -38,7 +39,6 @@ const cboxCallback = () => {
     if(!modal_text_area|| format_row){
         return;
     }
-    text_areas.add(modal_text_area);
     updateModal();
 };
 

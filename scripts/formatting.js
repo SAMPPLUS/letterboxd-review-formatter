@@ -252,7 +252,6 @@ function buildPreviewArea(text_area, classList=[]){
     });
     prv_btn.addEventListener('click', function(event){
         event.preventDefault();
-        console.log('preview swap');
         show_prev = (preview.style.display == "none");
         if (show_prev){
             preview.style.display = "block";
