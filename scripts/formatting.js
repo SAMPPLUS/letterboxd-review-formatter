@@ -1,8 +1,8 @@
 const SELECTORS = {
-    bold: "#frmt-bold",
-    italic: "#frmt-italic",
-    quote: "#frmt-quote",
-    link: "#frmt-link"
+    bold: "frmt-bold",
+    italic: "frmt-italic",
+    quote: "frmt-quote",
+    link: "frmt-link"
 }
 
 const TAGS = {
@@ -11,8 +11,52 @@ const TAGS = {
     quote: ["<blockquote>", "</blockquote>", "quote"]
 }
 
+const URLS = {
+    bold: "resources/icon-bold.svg",
+    italic: "resources/icon-italic.svg",
+    quote: "resources/icon-quote.svg",
+    link: "resources/icon-link.svg"
+}
+
+const btn_builder = [
+    [SELECTORS.bold, 'bold', URLS.bold],
+    [SELECTORS.italic, 'italic', URLS.italic],
+    [SELECTORS.quote, 'quote', URLS.quote],
+    [SELECTORS.link, 'link', URLS.link]
+]
+
+function buildFormatButton(id, label, icon_url){
+    let btn = document.createElement('a');
+    fetch(chrome.runtime.getURL(icon_url)).then(r=>r.text()).then(html => {
+        btn.insertAdjacentHTML('beforeend', html);
+    });
+    btn.classList.add('button');
+    btn.href="#";
+    btn.id=id;
+    btn.ariaLabel = label;
+    btn.style.padding = "1px 7px";
+    btn.style['margin-right'] = "3px"
+    btn.dataset.title = "heeloooooo worldddd";
+
+    return btn;
+}
+
+function buildFormatRow(){
+    let frmt_row = document.createElement('div');
+    frmt_row.id = "frmt-row";
+
+    btn_builder.forEach(element => {
+        frmt_row.insertAdjacentElement('beforeend', buildFormatButton(...element));
+    });
+
+    return frmt_row;
+}
+
 function insertTagAtRange(valueStart, valueEnd){
-    if(text_area==null){
+    if(text_areas.has(document.activeElement)){
+        var text_area = document.activeElement;
+    }
+    else{
         return;
     }
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
@@ -31,8 +75,8 @@ function insertTagAtRange(valueStart, valueEnd){
 
 };
 
-function insertTag(valueStart, valueEnd, valueInner) {
-    if(text_area==null){
+function insertTag(valueStart, valueEnd, valueInner, text_area) {
+    if(!text_area){
         return;
     }
     text_area.focus();
@@ -56,7 +100,7 @@ function insertTag(valueStart, valueEnd, valueInner) {
 
 };
 
-function insertHyperlink(){
+function insertHyperlink(text_area){
     if(text_area == null){
         return;
     }
@@ -100,52 +144,57 @@ function insertHyperlink(){
 
 };
 
-function addHyperlinkButtonListener(container){
-    container.querySelector(SELECTORS.link).addEventListener('mousedown', function(event) {
+function addHyperlinkButtonListener(container, text_area){
+    container.querySelector("#" + SELECTORS.link).addEventListener('mousedown', function(event) {
         event.preventDefault();
     });
-    container.querySelector(SELECTORS.link).addEventListener('click', function(event) {
+    container.querySelector("#" + SELECTORS.link).addEventListener('click', function(event) {
         event.preventDefault();
-        insertHyperlink();
-    });
-}
-
-function addButtonListener(container,selector, valueStart, valueEnd, valueInner){
-    container.querySelector(selector).addEventListener('mousedown', function(event) {
-        event.preventDefault();
-    });
-    container.querySelector(selector).addEventListener('click', function(event) {
-        event.preventDefault();
-        insertTag(valueStart,valueEnd, valueInner);
+        insertHyperlink(text_area);
     });
 }
 
-function addFormatButtonsListeners(container, types){
+function addButtonListener(container,selector, valueStart, valueEnd, valueInner, text_area){
+    let btn = container.querySelector("#" + selector);
+    btn.addEventListener('mousedown', function(event) {
+        event.preventDefault();
+    });
+    btn.addEventListener('click', function(event) {
+        event.preventDefault();
+        insertTag(valueStart,valueEnd, valueInner, text_area);
+    });
+}
+
+function addFormatButtonsListeners(container, types, text_area){
     types.forEach(type => {
-        addButtonListener(container, SELECTORS[type], ...TAGS[type]);
+        addButtonListener(container, SELECTORS[type], ...TAGS[type], text_area);
     });
 }
 
 
 function addKeyboardShortcuts(){
     document.addEventListener('keydown', function(e){
-        if (e.key == 'b' && (e.ctrlKey || e.metaKey)){
-            insertTag(...TAGS.bold);
+        var text_area = document.activeElement;
+        if(!text_areas.has(text_area) || !e.key){
+            return;
         }
-        else if (e.key == 'i' && (e.ctrlKey || e.metaKey)){
-            insertTag(...TAGS.italic);
+        if (e.key.toLowerCase() == 'b' && (e.ctrlKey || e.metaKey)){
+            insertTag(...TAGS.bold, text_area);
         }
-        else if (e.key == '.' && e.shiftKey && (e.ctrlKey || e.metaKey)){
-            insertTag(...TAGS.quote);
+        else if (e.key.toLowerCase() == 'i' && (e.ctrlKey || e.metaKey)){
+            insertTag(...TAGS.italic, text_area);
         }
-        else if (e.key == 'k' && (e.ctrlKey || e.metaKey)){
-            insertHyperlink();
+        else if (e.key.toLowerCase() == 'k' && e.shiftKey && (e.ctrlKey || e.metaKey)){
+            insertTag(...TAGS.quote, text_area);
+        }
+        else if (e.key.toLowerCase() == 'l' && e.shiftKey &&  (e.ctrlKey || e.metaKey)){
+            insertHyperlink(text_area);
         }
     });
 }
 
-function populatePreviewArea(){
-    if((preview_area==null) || text_area==null || text_area.value == ""){
+function populatePreviewArea(text_area){
+    if((preview_area==null) || text_area==null){
         return;
     }
     //break the text into paragraphs and put into preview element
@@ -159,3 +208,7 @@ function populatePreviewArea(){
     preview_area.innerHTML = inner_html;
     
 };
+
+var text_areas = new Set();
+var preview_area = null;
+addKeyboardShortcuts();

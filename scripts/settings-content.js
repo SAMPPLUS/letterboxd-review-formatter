@@ -1,6 +1,6 @@
-var format_row_html = "";
-var text_area = null;
+var settings_frmt_row = buildFormatRow();
 
+var settings_text_area;
 
 function createPreviewArea(){
     let preview = document.createElement('div');
@@ -18,33 +18,32 @@ function createPreviewArea(){
 }
 
 function settingsPopulatePreview(){
-    if(text_area.value == ""){
+    if(settings_text_area.value == ""){
         preview_area.parentElement.style.display="none";
         return;
     }
     preview_area.parentElement.style.display="";
-    populatePreviewArea();
+    populatePreviewArea(settings_text_area);
 }
 
 function insertElements(){
-    text_area = settings_container.querySelector('textarea');
-    console.log(text_area);
+    settings_text_area = settings_container.querySelector('textarea');
+    text_areas.add(settings_text_area);
     
-    text_area.insertAdjacentHTML('afterend', format_row_html);
+    settings_text_area.insertAdjacentElement('afterend', settings_frmt_row);
     settings_container.querySelector('#frmt-row').style['margin-top'] = "4px";
 
-    addFormatButtonsListeners(settings_container, ['bold','italic','quote']);
-    addHyperlinkButtonListener(settings_container);
+    addFormatButtonsListeners(settings_container, ['bold','italic','quote'], settings_text_area);
+    addHyperlinkButtonListener(settings_container, settings_text_area);
 
-    addKeyboardShortcuts();
 
     let preview= createPreviewArea();
     aside.insertAdjacentElement('beforeend',preview);
     preview_area = preview.querySelector('.body-text');
-    let p_offset = (text_area.offsetParent.offsetTop + text_area.offsetParent.offsetParent.offsetTop - preview.offsetTop) + "px";
+    let p_offset = (settings_text_area.offsetParent.offsetTop + settings_text_area.offsetParent.offsetParent.offsetTop - preview.offsetTop) + "px";
     preview.style['margin-top'] = p_offset;
 
-    text_area.addEventListener('input', function(event){
+    settings_text_area.addEventListener('input', function(event){
         settingsPopulatePreview();
     });
     settingsPopulatePreview();
@@ -58,7 +57,4 @@ fetch(chrome.runtime.getURL('/resources/format-row.html')).then(r => r.text()).t
     format_row_html = html;
     insertElements();
   });
-
-
-var preview_area = null;
 
