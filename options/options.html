@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Letterboxd Text Formatter options</title>
+    <style>
+      table {
+          border-collapse: collapse;
+          width: 100%;
+      }
+
+      th, td {
+          border: 1px solid black;
+          padding: 8px;
+          text-align: center;
+      }
+
+      th {
+          background-color: #f2f2f2;
+      }
+  </style>
+  </head>
+  <body>
+    <select id="color">
+      <option value="red">red</option>
+      <option value="green">green</option>
+      <option value="blue">blue</option>
+      <option value="yellow">yellow</option>
+    </select>
+
+    <label>
+      <input type="checkbox" id="like" />
+      I like colors.
+    </label>
+
+    <label>
+      keys:
+    </label>
+    <div id="keys"></div>
+
+    <table>
+      <tr>
+          <th>Type</th>
+          <th style="width: 2%">Active?</th>
+          <th>Key Combo</th>
+      </tr>
+      <tr>
+        <th>Bold</th>
+        <td><input type="checkbox" id="like" /></td>
+        <td><div id="boldkey"></div><button class="record bold" value="bold">record</button></td>
+      </tr>
+      <tr>
+        <th>Italic</th>
+        <td><input type="checkbox" id="like" /></td>
+        <td>cell</td>
+      </tr>
+      <tr>
+        <th>Quote</th>
+        <td><input type="checkbox" id="like" /></td>
+        <td>cell</td>
+      </tr>
+      <tr>
+        <th>Link</th>
+        <td><input type="checkbox" id="like" /></td>
+        <td>cell</td>
+      </tr>
+  </table>
+
+    <div id="status"></div>
+    <button id="save">Save</button>
+
+    <script src="options.js"></script>
+  </body>
+</html>
