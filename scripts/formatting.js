@@ -191,16 +191,20 @@ function addKeyboardShortcuts(){
         if(!text_areas.has(text_area) || !e.key){
             return;
         }
-        if (e.key.toLowerCase() == 'b' && (e.ctrlKey || e.metaKey)){
+        if (e.key.toLowerCase() == 'b'  && (e.ctrlKey || e.metaKey)){
+            e.preventDefault();
             insertTag(...TAGS.bold, text_area);
         }
         else if (e.key.toLowerCase() == 'i' && (e.ctrlKey || e.metaKey)){
+            e.preventDefault();
             insertTag(...TAGS.italic, text_area);
         }
         else if (e.key.toLowerCase() == 'k' && e.shiftKey && (e.ctrlKey || e.metaKey)){
+            e.preventDefault();
             insertTag(...TAGS.quote, text_area);
         }
         else if (e.key.toLowerCase() == 'l' && e.shiftKey &&  (e.ctrlKey || e.metaKey)){
+            e.preventDefault();
             insertHyperlink(text_area);
         }
     });
