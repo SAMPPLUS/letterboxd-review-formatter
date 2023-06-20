@@ -10,7 +10,7 @@
     },
     "content_scripts": [
         {
-            "js": ["scripts/formatting.js"],
+            "js": ["libs/purify.min.js","scripts/formatting.js"],
             "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/","https://*.letterboxd.com/settings/","https://*.letterboxd.com/*/list/*"]
         },
         {

@@ -26,6 +26,14 @@ const btn_builder = [
     [SELECTORS.link, 'link', ICONS.link]
 ]
 
+const WHITELISTED_TAGS = ['b', 'i', 'blockquote', 'a', 'strong', 'em']
+
+const PURIFY_CONFIG = {
+  USE_PROFILES: { html: true }, // Only allow HTML
+  IN_PLACE: true, // In place mode for faster sanitization,
+  ALLOWED_TAGS: WHITELISTED_TAGS, // Only allow tags specified in the whitelist above
+}
+
 function buildFormatButton(id, label, icon){
     let btn_attributes =  {
         id: id,
@@ -208,15 +216,20 @@ function populatePreviewArea(text_area, preview_area){
     if((preview_area==null) || text_area==null){
         return;
     }
+    while (preview_area.firstChild) {
+        preview_area.firstChild.remove();
+      }
     //break the text into paragraphs and put into preview element
     var p_separated_text = text_area.value.split("\n\n");
     var inner_html = "";
     p_separated_text.forEach(str => {
         if(str.length > 0){
-            inner_html = inner_html.concat("<p>"+str+"</p>");
+            let p = document.createElement('p');
+            str = DOMPurify.sanitize(str, PURIFY_CONFIG);
+            p.innerHTML= str;
+            preview_area.insertAdjacentElement('beforeend', p);
         }
     });
-    preview_area.innerHTML = inner_html;
 };
 
 /**
@@ -299,3 +312,6 @@ var formatrow_template = buildFormatRow();
 var text_areas = new Set();
 var modal_preview_area = null;
 addKeyboardShortcuts();
+
+
+
