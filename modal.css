@@ -6,10 +6,12 @@
 
 #cboxWrapper{
     overflow: visible !important;
+    width: fit-content !important;
 }
 #cboxLoadedContent {
     overflow: auto !important;
     height: fit-content !important;
+    width: fit-content !important;
 }
 
 textarea#frm-review {
