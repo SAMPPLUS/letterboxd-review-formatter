@@ -11,7 +11,7 @@ const listCallback = (mutationList, observer) => {
 };
 
 
-const list_observer = new MutationObserver()
+const list_observer = new MutationObserver(listCallback)
 var config = { attributes: true, childList: true, subtree: true };
 var list_text_area = list_container.querySelector('textarea');
 

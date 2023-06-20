@@ -319,6 +319,3 @@ var formatrow_template = buildFormatRow();
 var text_areas = new Set();
 var modal_preview_area = null;
 addKeyboardShortcuts();
-
-
-
