@@ -221,7 +221,6 @@ function populatePreviewArea(text_area, preview_area){
       }
     //break the text into paragraphs and put into preview element
     var p_separated_text = text_area.value.split("\n\n");
-    var inner_html = "";
     p_separated_text.forEach(str => {
         if(str.length > 0){
             let p = document.createElement('p');

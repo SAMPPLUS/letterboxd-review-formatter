@@ -2,9 +2,10 @@
     overflow: visible !important;
 }
 
-#cboxWrapper, #cboxContent, #cboxLoadedContent{
+
+
+#cboxWrapper{
     overflow: visible !important;
-    height: fit-content !important;
 }
 #cboxLoadedContent {
     overflow: auto !important;
