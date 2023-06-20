@@ -2,8 +2,6 @@
     overflow: visible !important;
 }
 
-
-
 #cboxWrapper{
     overflow: visible !important;
     width: fit-content !important;
@@ -16,4 +14,8 @@
 
 textarea#frm-review {
     resize: vertical !important;
+}
+
+.ltfModal {
+    color: #cde;
 }

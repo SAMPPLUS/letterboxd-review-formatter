@@ -1,19 +1,26 @@
 const settings_container = document.querySelector('.app-available-settings');
+const SETTINGS_CLASSLIST = ["body-text", "-small"];
 
 
-function insertElements(){
+const settingsCallback = (mutationList, observer) =>{  
     settings_text_area = settings_container.querySelector('textarea');
-    let frmt_row = insertFormatRow(settings_text_area);
-    let [preview_area, preview_btn] = buildPreviewArea(settings_text_area, ["body-text", "-small"]);
-    frmt_row.insertAdjacentElement('beforeend', preview_btn);
-    settings_text_area.insertAdjacentElement('beforebegin', preview_area);
-
-    settings_text_area.addEventListener('input', function(event){
-    });
-};
+    if(!settings_text_area){
+        return;
+    }
+    observer.disconnect();
+    insertFormatRow(settings_text_area, SETTINGS_CLASSLIST);
+}
 
 
 
 
-insertElements();
+
+const settings_observer = new MutationObserver(settingsCallback);
+var config = { attributes: true, childList: true, subtree: true };
+var settings_text_area = settings_container.querySelector('textarea');
+
+if(settings_text_area) insertFormatRow(settings_text_area, SETTINGS_CLASSLIST);
+else settings_observer.observe(settings_container, config);
+
+
 

@@ -2,18 +2,11 @@ var modal_text_area = null;
 var modal_preview_area = null;
 var modal_preview_btn = null;
 
-
+const MODAL_CLASSLIST = ["review", "body-text", "-loose", "ltfModal"];
 
 function updateModal(){
     modal_text_area.style['margin-bottom'] = '0';
-    let frmt_row = insertFormatRow(modal_text_area);
-
-    //add preview
-    [modal_preview_area, modal_preview_btn] = buildPreviewArea(modal_text_area, ["review", "body-text", "-prose", "-loose"]);
-    modal_preview_area.style.color = "#cde";
-    modal_text_area.insertAdjacentElement('beforebegin', modal_preview_area); 
-    frmt_row.insertAdjacentElement('beforeend', modal_preview_btn);
-    
+    insertFormatRow(modal_text_area, MODAL_CLASSLIST);
     modal_text_area.style['max-width'] = modal_text_area.style.width;
 
 }

@@ -297,18 +297,22 @@ function buildPreviewArea(text_area, classList=[]){
  * @param {Element} text_area  the textarea element to add formatting buttons to
  * @returns 
  */
-function insertFormatRow(text_area){
-    if(text_area == null){
+function insertFormatRow(text_area, classList = []){
+    if(text_area == null || text_area.classList.contains('ltf')){
         return;
     }
     if(formatrow_template == null){
         formatrow_template = buildFormatRow();
     }
+    text_area.classList.add('ltf');
     var format_row = formatrow_template.cloneNode(true);
     text_areas.add(text_area);
     text_area.insertAdjacentElement('afterend', format_row);
     addFormatButtonsListeners(format_row, ['bold','italic','quote'], text_area);
     addHyperlinkButtonListener(format_row, text_area);
+    let [preview_area, preview_btn] = buildPreviewArea(text_area, classList);
+    text_area.insertAdjacentElement('beforebegin', preview_area);
+    format_row.insertAdjacentElement('beforeend', preview_btn);
     return format_row;
 }
 var formatrow_template = buildFormatRow();
