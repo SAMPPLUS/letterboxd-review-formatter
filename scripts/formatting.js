@@ -11,7 +11,6 @@ const TAGS = {
     quote: ["<blockquote>", "</blockquote>", "quote"]
 }
 
-
 const ICONS = {
     bold: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#def" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bold"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg>',
     italic:'<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#def" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-italic"><line x1="19" y1="4" x2="10" y2="4"></line><line x1="14" y1="20" x2="5" y2="20"></line><line x1="15" y1="4" x2="9" y2="20"></line></svg>',
@@ -27,14 +26,11 @@ const btn_builder = [
 ]
 
 const WHITELISTED_TAGS = ['b', 'i', 'blockquote', 'a', 'strong', 'em']
-
 const PURIFY_CONFIG = {
   USE_PROFILES: { html: true }, // Only allow HTML
   IN_PLACE: true, // In place mode for faster sanitization,
   ALLOWED_TAGS: WHITELISTED_TAGS, // Only allow tags specified in the whitelist above
 }
-
-
 
 function buildFormatRowTemplate(){
     let tmpl = document.createElement('div');
@@ -137,14 +133,10 @@ function insertHyperlink(text_area){
         return;
     }
     text_area.focus();
-
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
     var linkUrl = window.prompt("Enter the URL:");
-
     if(linkUrl=="") linkUrl = "link URL goes here";
     else if(linkUrl==null) return;
-    linkUrl = DOMPurify.sanitize(linkUrl, PURIFY_CONFIG);
-
     if (start==end) var linkText = window.prompt("Enter the link text:");
     else{
         var linkText = text_area.value.substring(start, end);
@@ -155,10 +147,8 @@ function insertHyperlink(text_area){
             text_area.setRangeText("", start, end, 'end');
         }
     }
-
     if (linkText=="") linkText = 'link text goes here';
     else if(linkText==null) return;
-    linkText = DOMPurify.sanitize(linkText, PURIFY_CONFIG);
     var tag = `<a href="${linkUrl}">${linkText}</a>`;
     try{
         document.execCommand("insertText", false, tag);
@@ -253,6 +243,22 @@ function populatePreviewArea(text_area, preview_area){
     });
 };
 
+function setPreviewVis(preview_area, text_area, prv_btn, show_prev){
+    if (show_prev){
+        preview_area.style.display = "block";
+        populatePreviewArea(text_area, preview_area);
+        if (preview_area.scrollHeight > text_area.offsetHeight) preview_area.style.height = 'fit-content';
+        else preview_area.style.height = text_area.offsetHeight + "px";
+        text_area.style.display = "none";
+        prv_btn.innerText = "edit";
+    }
+    else{
+        text_area.style.display = "block";
+        preview_area.style.display = "none";
+        prv_btn.innerText = "preview";
+    }
+}
+
 /**
  * creates a preview div for a textarea, as well as a button to toggle preview visibility
  * @param {Element} text_area  the textarea element to preview
@@ -274,20 +280,7 @@ function buildPreviewArea(text_area, classList=[]){
     prv_btn.addEventListener('click', function(event){
         event.preventDefault();
         show_prev = (preview.style.display == "none");
-        if (show_prev){
-            preview.style.display = "block";
-            populatePreviewArea(text_area, preview);
-            if (preview.scrollHeight > text_area.offsetHeight) preview.style.height = 'fit-content';
-            else preview.style.height = text_area.offsetHeight + "px";
-            text_area.style.display = "none";
-            prv_btn.innerText = "edit";
-        }
-        else{
-            text_area.style.display = "block";
-            preview.style.display = "none";
-            prv_btn.innerText = "preview";
-        }
-        
+        setPreviewVis(preview, text_area, prv_btn, show_prev);   
     });
     return [preview, prv_btn];
 }
@@ -309,8 +302,29 @@ function insertFormatRow(text_area, classList = []){
     let [preview_area, preview_btn] = buildPreviewArea(text_area, classList);
     text_area.insertAdjacentElement('beforebegin', preview_area);
     format_row.insertAdjacentElement('beforeend', preview_btn);
-    return format_row;
+    return [format_row, preview_area, preview_btn];
 }
+
+function waitForElm(selector, container =document, search_st =true) {
+    return new Promise(resolve => {
+        if (container.querySelector(selector)) {
+            return resolve(container.querySelector(selector));
+        }
+
+        const observer = new MutationObserver(mutations => {
+            if (container.querySelector(selector)) {
+                resolve(container.querySelector(selector));
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: search_st
+        });
+    });
+}
+
 const format_btn_tmpl = buildFormatBtnTemplate();
 const format_row_tmpl = buildFormatRowTemplate();
 const prv_btn_tmpl = buildPreviewBtnTemplate();

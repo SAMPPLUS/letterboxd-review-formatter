@@ -16,6 +16,10 @@ textarea#frm-review {
     resize: vertical !important;
 }
 
+.ltf {
+    margin-bottom: 0 !important;
+}
+
 .ltfModal {
     color: #cde;
 }

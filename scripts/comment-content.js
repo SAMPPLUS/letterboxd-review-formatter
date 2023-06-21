@@ -1,24 +1,15 @@
-var content_container = document.querySelector('#content');
-var comment_text_area = null;
 const COMMENT_CLASSLIST = ['body-text', '-small'];
 
-const commentsCallback = (mutationList, observer) =>{  
-      
-    comment_text_area = content_container.querySelector("#comments textarea");
-    if(!comment_text_area){
-        return;
-    }
-    observer.disconnect();
-    insertFormatRow(comment_text_area, COMMENT_CLASSLIST);
-}
-
-
-
-const comment_observer = new MutationObserver(commentsCallback);
-var config = { attributes: true, childList: true, subtree: true };
-comment_text_area = content_container.querySelector("#comments textarea");
-
-if(comment_text_area) insertFormatRow(comment_text_area, COMMENT_CLASSLIST);
-else comment_observer.observe(content_container, config);
+waitForElm('#comments').then((container) => {
+    waitForElm('textarea', container).then((text_area) => {
+        let [format_row, preview_area, preview_btn] = insertFormatRow(text_area, COMMENT_CLASSLIST);
+        waitForElm("input[type='submit']", container).then((el) => {
+            el.addEventListener('click', () => {
+                setPreviewVis(preview_area, text_area, preview_btn, false);
+            });
+        });
+    });
+    
+});
 
 
