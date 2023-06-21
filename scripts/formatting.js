@@ -34,40 +34,71 @@ const PURIFY_CONFIG = {
   ALLOWED_TAGS: WHITELISTED_TAGS, // Only allow tags specified in the whitelist above
 }
 
-function buildFormatButton(id, label, icon){
-    let btn_attributes =  {
-        id: id,
-        className: 'button',
-        href: '#',
-        ariaLabel: label,
-    }
-    let btn = document.createElement('a');
-    btn.innerHTML = icon;
-    btn.style.padding = "1px 7px";
-    btn.style.margin = "0 2px 0 0";
-    btn = Object.assign(btn, btn_attributes);
 
-    return btn;
-}
 
-function buildFormatRow(){
-    let frmt_row = document.createElement('div');
-    frmt_row.id = "frmt-row";
-    frmt_row.style["padding-top"] = "4px";
+function buildFormatRowTemplate(){
+    let tmpl = document.createElement('div');
+    tmpl.id = "frmt-row";
+    tmpl.style["padding-top"] = "4px";
 
     btn_builder.forEach(element => {
-        frmt_row.insertAdjacentElement('beforeend', buildFormatButton(...element));
+        tmpl.insertAdjacentElement('beforeend', buildFormatButton(...element));
     });
 
-    return frmt_row;
+    return tmpl;
+}
+
+function buildFormatBtnTemplate(){
+    let btn_attributes =  {
+        className: 'button',
+        href: '#'
+    }
+    let btn_tmpl = document.createElement('a');
+    btn_tmpl.style.padding = "1px 7px";
+    btn_tmpl.style.margin = "0 2px 0 0";
+    btn_tmpl = Object.assign(btn_tmpl, btn_attributes);
+
+    return btn_tmpl;
+}
+
+function buildPreviewBtnTemplate(){
+    let btn_tmpl = document.createElement('a')
+    btn_tmpl.id = 'frmt-preview';
+    btn_tmpl.href = "#";
+    btn_tmpl.ariaLabel="preview";
+    btn_tmpl.classList.add('button');
+    btn_tmpl.classList.add('right');
+    btn_tmpl.innerText='preview'
+    btn_tmpl.style['font-size'] = ".9rem"
+    btn_tmpl.style.padding = "6px 12px 6px 12px";
+    return btn_tmpl;
+}
+
+function buildPreviewAreaTemplate(){
+    let prv_tmpl = document.createElement('div');
+    prv_tmpl.style.color="#9abs";
+    prv_tmpl.style.display="none";
+    prv_tmpl.style['padding-left'] = "10px";
+    prv_tmpl.style["border-left"] = "1px #9ab solid";
+    prv_tmpl.style.overflow = "auto";
+    prv_tmpl.style.resize = "vertical";
+    return prv_tmpl;
+}
+
+function buildFormatButton(id, label, icon){
+    
+    let btn = format_btn_tmpl.cloneNode(true);
+    btn.innerHTML = icon;
+    btn.id = id;
+    btn.ariaLabel = label;
+    
+    return btn;
 }
 
 function insertTagAtRange(valueStart, valueEnd, text_area){
     
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
-    if(start==end){
-        return;
-    }
+    if(start==end) return;
     var inner_txt = text_area.value.substring(start, end);
     try {
         document.execCommand("delete", false, "")
@@ -86,12 +117,10 @@ function insertTag(valueStart, valueEnd, valueInner, text_area) {
     }
     text_area.focus();
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
-
     if (start != end){
         insertTagAtRange(valueStart, valueEnd, text_area);
         return;
     }
-
     try {
         document.execCommand("insertText", false, valueStart+valueInner+valueEnd);
     }
@@ -99,10 +128,8 @@ function insertTag(valueStart, valueEnd, valueInner, text_area) {
         //in case of execCommand deprecation (this does not allow ctrl+z undo)
         text_area.setRangeText(valueStart+valueInner+valueEnd, start, end, 'end');
     }
-
     text_area.selectionStart -= (valueEnd.length+valueInner.length);
     text_area.selectionEnd -= (valueEnd.length);
-
 };
 
 function insertHyperlink(text_area){
@@ -114,15 +141,11 @@ function insertHyperlink(text_area){
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
     var linkUrl = window.prompt("Enter the URL:");
 
-    if(linkUrl==""){
-        linkUrl = "link URL goes here";
-    }
-    else if(linkUrl==null){
-        return;
-    }
-    if (start==end){
-        var linkText = window.prompt("Enter the link text:");
-    }
+    if(linkUrl=="") linkUrl = "link URL goes here";
+    else if(linkUrl==null) return;
+    linkUrl = DOMPurify.sanitize(linkUrl, PURIFY_CONFIG);
+
+    if (start==end) var linkText = window.prompt("Enter the link text:");
     else{
         var linkText = text_area.value.substring(start, end);
         try{
@@ -132,12 +155,10 @@ function insertHyperlink(text_area){
             text_area.setRangeText("", start, end, 'end');
         }
     }
-    if (linkText==""){
-        linkText = 'link text goes here';
-    }
-    else if(linkText==null){
-        return;
-    }
+
+    if (linkText=="") linkText = 'link text goes here';
+    else if(linkText==null) return;
+    linkText = DOMPurify.sanitize(linkText, PURIFY_CONFIG);
     var tag = `<a href="${linkUrl}">${linkText}</a>`;
     try{
         document.execCommand("insertText", false, tag);
@@ -217,12 +238,9 @@ function addKeyboardShortcuts(){
  * @returns 
  */
 function populatePreviewArea(text_area, preview_area){
-    if((preview_area==null) || text_area==null){
-        return;
-    }
-    while (preview_area.firstChild) {
-        preview_area.firstChild.remove();
-      }
+    if((preview_area==null) || text_area==null) return;
+    while (preview_area.firstChild) preview_area.firstChild.remove();
+
     //break the text into paragraphs and put into preview element
     var p_separated_text = text_area.value.split("\n\n");
     p_separated_text.forEach(str => {
@@ -243,25 +261,12 @@ function populatePreviewArea(text_area, preview_area){
  */
 function buildPreviewArea(text_area, classList=[]){
     //add preview button
-    var prv_btn = document.createElement('a')
-    prv_btn.id = 'frmt-preview';
-    prv_btn.href = "#";
-    prv_btn.ariaLabel="preview";
-    prv_btn.classList.add('button');
-    prv_btn.classList.add('right');
-    prv_btn.innerText='preview'
-    prv_btn.style['font-size'] = ".9rem"
-    prv_btn.style.padding = "6px 12px 6px 12px";
+    var prv_btn = prv_btn_tmpl.cloneNode(true);
     // add preview area
-    var preview = document.createElement('div');
+    var preview = prv_area_tmpl.cloneNode(true);
     preview.classList.add( ...classList);
-    preview.style.color="#9abs";
-    preview.style.display="none";
-    preview.style['padding-left'] = "10px";
-    preview.style["border-left"] = "1px #9ab solid";
-    preview.style.overflow = "auto";
-    preview.style.resize = "vertical";
     text_area.insertAdjacentElement('beforebegin', preview)
+
     //
     prv_btn.addEventListener('mousedown', function(event){
         event.preventDefault();
@@ -272,12 +277,8 @@ function buildPreviewArea(text_area, classList=[]){
         if (show_prev){
             preview.style.display = "block";
             populatePreviewArea(text_area, preview);
-            if (preview.scrollHeight > text_area.offsetHeight){
-                preview.style.height = 'fit-content';
-            }
-            else{
-                preview.style.height = text_area.offsetHeight + "px";
-            }
+            if (preview.scrollHeight > text_area.offsetHeight) preview.style.height = 'fit-content';
+            else preview.style.height = text_area.offsetHeight + "px";
             text_area.style.display = "none";
             prv_btn.innerText = "edit";
         }
@@ -285,7 +286,6 @@ function buildPreviewArea(text_area, classList=[]){
             text_area.style.display = "block";
             preview.style.display = "none";
             prv_btn.innerText = "preview";
-
         }
         
     });
@@ -298,15 +298,11 @@ function buildPreviewArea(text_area, classList=[]){
  * @returns 
  */
 function insertFormatRow(text_area, classList = []){
-    if(text_area == null || text_area.classList.contains('ltf')){
-        return;
-    }
-    if(formatrow_template == null){
-        formatrow_template = buildFormatRow();
-    }
-    text_area.classList.add('ltf');
-    var format_row = formatrow_template.cloneNode(true);
+    if(text_area == null || text_area.classList.contains('ltf')) return;
+
     text_areas.add(text_area);
+    text_area.classList.add('ltf');
+    var format_row = format_row_tmpl.cloneNode(true);
     text_area.insertAdjacentElement('afterend', format_row);
     addFormatButtonsListeners(format_row, ['bold','italic','quote'], text_area);
     addHyperlinkButtonListener(format_row, text_area);
@@ -315,7 +311,10 @@ function insertFormatRow(text_area, classList = []){
     format_row.insertAdjacentElement('beforeend', preview_btn);
     return format_row;
 }
-var formatrow_template = buildFormatRow();
+const format_btn_tmpl = buildFormatBtnTemplate();
+const format_row_tmpl = buildFormatRowTemplate();
+const prv_btn_tmpl = buildPreviewBtnTemplate();
+const prv_area_tmpl = buildPreviewAreaTemplate();
 var text_areas = new Set();
 var modal_preview_area = null;
 addKeyboardShortcuts();
