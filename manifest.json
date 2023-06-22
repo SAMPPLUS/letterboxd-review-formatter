@@ -8,6 +8,13 @@
         "48": "images/icon-48.png",
         "128": "images/icon-128.png"
     },
+    "permissions": [
+        "storage"
+    ],
+    "options_ui": {
+        "page": "options/options.html",
+        "open_in_tab": false
+    },
     "content_scripts": [
         {
             "js": ["libs/purify.min.js","scripts/formatting.js"],

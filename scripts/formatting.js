@@ -32,6 +32,9 @@ const PURIFY_CONFIG = {
   ALLOWED_TAGS: WHITELISTED_TAGS, // Only allow tags specified in the whitelist above
 }
 
+var shortcutsEnabled = true;
+
+
 function buildFormatRowTemplate(){
     let tmpl = document.createElement('div');
     tmpl.id = "frmt-row";
@@ -197,11 +200,10 @@ function addFormatButtonsListeners(container, types, text_area){
  * activates the formatting keyboard shortcuts
  */
 function addKeyboardShortcuts(){
+    if (!shortcutsEnabled) return;
     document.addEventListener('keydown', function(e){
         var text_area = document.activeElement;
-        if(!text_areas.has(text_area) || !e.key){
-            return;
-        }
+        if(!text_areas.has(text_area) || !e.key || !shortcutsEnabled) return;
         if (e.key.toLowerCase() == 'b'  && (e.ctrlKey || e.metaKey)){
             e.preventDefault();
             insertTag(...TAGS.bold, text_area);
@@ -325,10 +327,16 @@ function waitForElm(selector, container =document, search_st =true) {
     });
 }
 
+chrome.storage.sync.get(
+    {shortcutsEnabled: true },
+    (items) => {
+      shortcutsEnabled = items.shortcutsEnabled;
+    }
+)
+addKeyboardShortcuts();
 const format_btn_tmpl = buildFormatBtnTemplate();
 const format_row_tmpl = buildFormatRowTemplate();
 const prv_btn_tmpl = buildPreviewBtnTemplate();
 const prv_area_tmpl = buildPreviewAreaTemplate();
 var text_areas = new Set();
 var modal_preview_area = null;
-addKeyboardShortcuts();

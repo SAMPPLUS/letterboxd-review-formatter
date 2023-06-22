@@ -1,6 +1,7 @@
 # Change Log
 
 ## 0.5.0
+- added option to disable keyboard shortcuts
 - fixed modal opening animation
 - sanitizing preview output for improved security
 - various fixes and improvements
