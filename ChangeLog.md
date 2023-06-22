@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.0
+- fixed modal opening animation
+- sanitizing preview output for improved security
+- various fixes and improvements
 ## 0.4.0
 - made styling and layout more consistant across different text areas
 - performance improvements
