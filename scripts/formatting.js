@@ -327,12 +327,12 @@ function waitForElm(selector, container =document, search_st =true) {
     });
 }
 
-chrome.storage.sync.get(
-    {shortcutsEnabled: true },
-    (items) => {
-      shortcutsEnabled = items.shortcutsEnabled;
-    }
-)
+browser.storage.sync.get(
+    {"shortcutsEnabled": true}
+).then(items => {
+    console.log(items);
+    shortcutsEnabled = items.shortcutsEnabled;
+});
 addKeyboardShortcuts();
 const format_btn_tmpl = buildFormatBtnTemplate();
 const format_row_tmpl = buildFormatRowTemplate();

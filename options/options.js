@@ -2,8 +2,8 @@
 const saveOptions = () => {
     const shortcutsEnabled = document.getElementById('ks-enabled').checked;
   
-    chrome.storage.sync.set(
-      {shortcutsEnabled: shortcutsEnabled },
+    browser.storage.sync.set(
+      {shortcutsEnabled: shortcutsEnabled }).then(
       () => {
         // Update status to let user know options were saved.
         const status = document.getElementById('status');
@@ -16,10 +16,10 @@ const saveOptions = () => {
   };
   
   // Restores select box and checkbox state using the preferences
-  // stored in chrome.storage.
+  // stored in browser.storage.
   const restoreOptions = () => {
-    chrome.storage.sync.get(
-      {shortcutsEnabled: true },
+    browser.storage.sync.get(
+      {shortcutsEnabled: true }).then(
       (items) => {
         document.getElementById('ks-enabled').checked = items.shortcutsEnabled;
       }
