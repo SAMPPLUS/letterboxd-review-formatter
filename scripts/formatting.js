@@ -39,11 +39,9 @@ function buildFormatRowTemplate(){
     let tmpl = document.createElement('div');
     tmpl.id = "frmt-row";
     tmpl.style["padding-top"] = "4px";
-
     btn_builder.forEach(element => {
         tmpl.insertAdjacentElement('beforeend', buildFormatButton(...element));
     });
-
     return tmpl;
 }
 
@@ -56,7 +54,6 @@ function buildFormatBtnTemplate(){
     btn_tmpl.style.padding = "1px 7px";
     btn_tmpl.style.margin = "0 2px 0 0";
     btn_tmpl = Object.assign(btn_tmpl, btn_attributes);
-
     return btn_tmpl;
 }
 
@@ -84,18 +81,15 @@ function buildPreviewAreaTemplate(){
     return prv_tmpl;
 }
 
-function buildFormatButton(id, label, icon){
-    
+function buildFormatButton(id, label, icon){ 
     let btn = format_btn_tmpl.cloneNode(true);
     btn.innerHTML = icon;
     btn.id = id;
     btn.ariaLabel = label;
-    
     return btn;
 }
 
 function insertTagAtRange(valueStart, valueEnd, text_area){
-    
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
     if(start==end) return;
     var inner_txt = text_area.value.substring(start, end);
@@ -107,13 +101,10 @@ function insertTagAtRange(valueStart, valueEnd, text_area){
         text_area.setRangeText("", start, end, 'end' );
         text_area.setRangeText(valueStart+inner_txt+valueEnd, start, end, 'end');
       }
-
 };
 
 function insertTag(valueStart, valueEnd, valueInner, text_area) {
-    if(!text_area){
-        return;
-    }
+    if(!text_area) return;
     text_area.focus();
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
     if (start != end){
@@ -160,7 +151,6 @@ function insertHyperlink(text_area){
         //in case of execCommand deprecation (this does not allow ctrl+z undo)
         text_area.setRangeText(tag, start, end, 'end');
     }
-
 };
 
 function addHyperlinkButtonListener(container, text_area){
@@ -190,8 +180,8 @@ function addButtonListener(container,selector, valueStart, valueEnd, valueInner,
  * @param {*} types the formatting types of buttons to add
  * @param {*} text_area the text area the buttons pertain to
  */
-function addFormatButtonsListeners(container, types, text_area){ 
-    types.forEach(type => {
+function addFormatButtonsListeners(container, text_area){ 
+    ['bold','italic','quote'].forEach(type => {
         addButtonListener(container, SELECTORS[type], ...TAGS[type], text_area);
     });
 }
@@ -274,8 +264,6 @@ function buildPreviewArea(text_area, classList=[]){
     var preview = prv_area_tmpl.cloneNode(true);
     preview.classList.add( ...classList);
     text_area.insertAdjacentElement('beforebegin', preview)
-
-    //
     prv_btn.addEventListener('mousedown', function(event){
         event.preventDefault();
     });
@@ -299,7 +287,7 @@ function insertFormatRow(text_area, classList = []){
     text_area.classList.add('ltf');
     var format_row = format_row_tmpl.cloneNode(true);
     text_area.insertAdjacentElement('afterend', format_row);
-    addFormatButtonsListeners(format_row, ['bold','italic','quote'], text_area);
+    addFormatButtonsListeners(format_row, text_area);
     addHyperlinkButtonListener(format_row, text_area);
     let [preview_area, preview_btn] = buildPreviewArea(text_area, classList);
     text_area.insertAdjacentElement('beforebegin', preview_area);
@@ -320,7 +308,7 @@ function waitForElm(selector, container =document, search_st =true) {
             }
         });
 
-        observer.observe(document.body, {
+        observer.observe(container, {
             childList: true,
             subtree: search_st
         });
@@ -331,9 +319,9 @@ chrome.storage.sync.get(
     {shortcutsEnabled: true },
     (items) => {
       shortcutsEnabled = items.shortcutsEnabled;
+      addKeyboardShortcuts();
     }
 )
-addKeyboardShortcuts();
 const format_btn_tmpl = buildFormatBtnTemplate();
 const format_row_tmpl = buildFormatRowTemplate();
 const prv_btn_tmpl = buildPreviewBtnTemplate();
