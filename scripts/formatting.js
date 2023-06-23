@@ -312,14 +312,12 @@ function waitForElm(selector, container =document, search_st =true) {
         if (container.querySelector(selector)) {
             return resolve(container.querySelector(selector));
         }
-
         const observer = new MutationObserver(mutations => {
             if (container.querySelector(selector)) {
                 resolve(container.querySelector(selector));
                 observer.disconnect();
             }
         });
-
         observer.observe(document.body, {
             childList: true,
             subtree: search_st
