@@ -34,7 +34,6 @@ const PURIFY_CONFIG = {
 
 var shortcutsEnabled = true;
 
-
 function buildFormatRowTemplate(){
     let tmpl = document.createElement('div');
     tmpl.id = "frmt-row";
