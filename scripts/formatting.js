@@ -45,14 +45,9 @@ function buildFormatRowTemplate(){
 }
 
 function buildFormatBtnTemplate(){
-    let btn_attributes =  {
-        className: 'button',
-        href: '#'
-    }
     let btn_tmpl = document.createElement('a');
-    btn_tmpl.style.padding = "1px 7px";
-    btn_tmpl.style.margin = "0 2px 0 0";
-    btn_tmpl = Object.assign(btn_tmpl, btn_attributes);
+    btn_tmpl.href = '#';
+    btn_tmpl.classList.add('button', 'frmt-btn');
     return btn_tmpl;
 }
 
@@ -71,12 +66,9 @@ function buildPreviewBtnTemplate(){
 
 function buildPreviewAreaTemplate(){
     let prv_tmpl = document.createElement('div');
+    prv_tmpl.classList.add('frmt-prv');
     prv_tmpl.style.color="#9abs";
     prv_tmpl.style.display="none";
-    prv_tmpl.style['padding-left'] = "10px";
-    prv_tmpl.style["border-left"] = "1px #9ab solid";
-    prv_tmpl.style.overflow = "auto";
-    prv_tmpl.style.resize = "vertical";
     return prv_tmpl;
 }
 

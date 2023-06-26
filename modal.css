@@ -27,3 +27,15 @@ textarea#frm-review {
 .ltfModal blockquote {
     border-left: 1px solid #abc !important;
 }
+
+a.frmt-btn {
+    padding: 1px 7px;
+    margin: 0 2px 0 0;
+}
+
+div.frmt-prv {
+    padding-left: 10px;
+    border-left: 1px #9ab solid;
+    overflow: auto;
+    resize: vertical;
+}
