@@ -23,3 +23,7 @@ textarea#frm-review {
 .ltfModal {
     color: #cde;
 }
+
+.ltfModal blockquote {
+    border-left: 1px solid #abc !important;
+}
