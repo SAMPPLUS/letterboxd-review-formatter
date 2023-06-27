@@ -184,7 +184,9 @@ function populatePreviewArea(text_area, preview_area){
     });
 };
 
-function setPreviewVis(preview_area, text_area, prv_btn, show_prev){
+function setPreviewVis(preview_area, text_area, format_row, show_prev){
+    var prv_btn = format_row.querySelector('#frmt-preview');
+    var frmt_btns = format_row.querySelectorAll('.frmt-btn');
     if (show_prev){
         preview_area.style.display = "block";
         populatePreviewArea(text_area, preview_area);
@@ -192,11 +194,17 @@ function setPreviewVis(preview_area, text_area, prv_btn, show_prev){
         else preview_area.style.height = text_area.offsetHeight + "px";
         text_area.style.display = "none";
         prv_btn.innerText = "edit";
+        frmt_btns.forEach(element => {
+            element.style.display = 'none';
+        });
     }
     else{
         text_area.style.display = "block";
         preview_area.style.display = "none";
         prv_btn.innerText = "preview";
+        frmt_btns.forEach(element => {
+            element.style.display = 'inline-block';
+        });
     }
 }
 
@@ -260,7 +268,20 @@ function insertFormatRow(text_area, classList = []){
         insertHyperlink(text_area);
     });
 
-    let [preview_area, preview_btn] = buildPreviewArea(text_area, classList);
+    var preview_btn = prv_btn_tmpl.cloneNode(true);
+    // add preview area
+    var preview_area = prv_area_tmpl.cloneNode(true);
+    preview_area.classList.add( ...classList);
+    text_area.insertAdjacentElement('beforebegin', preview_area)
+    preview_btn.addEventListener('mousedown', function(event){
+        event.preventDefault();
+    });
+    preview_btn.addEventListener('click', function(event){
+        event.preventDefault();
+        show_prev = (preview_area.style.display == "none");
+        setPreviewVis(preview_area, text_area, format_row, show_prev);   
+    });
+
     text_area.insertAdjacentElement('beforebegin', preview_area);
     format_row.insertAdjacentElement('beforeend', preview_btn);
     return [format_row, preview_area, preview_btn];

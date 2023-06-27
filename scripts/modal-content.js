@@ -17,8 +17,8 @@ waitForElm('#colorbox').then((colorbox) => {
     waitForElm('#cboxWrapper', colorbox).then((el) => {
         var config = { attributes: true, childList: false, subtree: false };
         const cbox_observer = new MutationObserver(() => {
-            if(modal_preview_area && modal_preview_btn && modal_text_area){
-                setPreviewVis(modal_preview_area, modal_text_area, modal_preview_btn, false);
+            if(modal_preview_area && modal_format_row && modal_text_area){
+                setPreviewVis(modal_preview_area, modal_text_area, modal_format_row, false);
             };
             cboxContent?.style?.setProperty('height', 'fit-content', 'important');
         });
