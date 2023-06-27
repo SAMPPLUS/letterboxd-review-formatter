@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.5.1
+- reduced size of icon
+- various visual and bug fixes
 ## 0.5.0
 - added option to disable keyboard shortcuts
 - fixed modal opening animation
