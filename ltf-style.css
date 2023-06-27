@@ -22,7 +22,7 @@ textarea#frm-review {
 }
 
 .ltfModal {
-    color: #cde;
+    color: #cde !important;
 }
 
 .ltfModal blockquote {
@@ -43,11 +43,17 @@ a.prv-btn {
 div.frmt-prv {
     padding-left: 10px;
     border-left: 1px #9ab solid;
-    overflow: auto;
+    overflow: auto !important;
     resize: vertical;
     color: #9ab;
 }
 
 div.frmt-row {
     padding-top: 4px;
+}
+
+.ltf-hidden {
+    opacity: 0%;
+    cursor: default;
+    pointer-events: none;
 }

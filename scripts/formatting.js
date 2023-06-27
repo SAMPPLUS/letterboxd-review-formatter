@@ -195,7 +195,7 @@ function setPreviewVis(preview_area, text_area, format_row, show_prev){
         text_area.style.display = "none";
         prv_btn.innerText = "edit";
         frmt_btns.forEach(element => {
-            element.style.display = 'none';
+            element.classList.add('ltf-hidden')
         });
     }
     else{
@@ -204,6 +204,9 @@ function setPreviewVis(preview_area, text_area, format_row, show_prev){
         prv_btn.innerText = "preview";
         frmt_btns.forEach(element => {
             element.style.display = 'inline-block';
+        });
+        frmt_btns.forEach(element => {
+            element.classList.remove('ltf-hidden');
         });
     }
 }
