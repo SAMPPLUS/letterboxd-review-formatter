@@ -1,6 +1,7 @@
 # Change Log
 
-## 0.5.1
+## 0.6.0
+- made format buttons disappear while preview active
 - reduced size of icon
 - various visual and bug fixes
 ## 0.5.0
