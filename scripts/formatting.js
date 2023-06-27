@@ -106,9 +106,7 @@ function insertTag(valueStart, valueEnd, valueInner, text_area) {
 };
 
 function insertHyperlink(text_area){
-    if(text_area == null){
-        return;
-    }
+    if(text_area == null) return;
     text_area.focus();
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
     var linkUrl = window.prompt("Enter the URL:");
@@ -136,26 +134,6 @@ function insertHyperlink(text_area){
     }
 };
 
-/**
- * 
- * @param {*} format_row HTML parent element that contains the buttons
- * @param {*} types the formatting types of buttons to add
- * @param {*} text_area the text area the buttons pertain to
- */
-function addFormatButtonsListeners(format_row, text_area){ 
-    ['bold','italic','quote'].forEach(type => {
-        let selector = SELECTORS[type];
-        let [valueStart, valueEnd, valueInner] = TAGS[type];
-        let btn = format_row.querySelector("#" + selector);
-        btn.addEventListener('mousedown', function(event) {
-            event.preventDefault();
-        });
-        btn.addEventListener('click', function(event) {
-            event.preventDefault();
-            insertTag(valueStart,valueEnd, valueInner, text_area);
-        });
-    });
-}
 
 /**
  * activates the formatting keyboard shortcuts
@@ -258,8 +236,20 @@ function insertFormatRow(text_area, classList = []){
     text_area.classList.add('ltf');
     var format_row = format_row_tmpl.cloneNode(true);
     text_area.insertAdjacentElement('afterend', format_row);
-
-    addFormatButtonsListeners(format_row, text_area);
+    
+    //button listeners
+    ['bold','italic','quote'].forEach(type => {
+        let selector = SELECTORS[type];
+        let [valueStart, valueEnd, valueInner] = TAGS[type];
+        let btn = format_row.querySelector("#" + selector);
+        btn.addEventListener('mousedown', function(event) {
+            event.preventDefault();
+        });
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
+            insertTag(valueStart,valueEnd, valueInner, text_area);
+        });
+    });
     //link button listener
     format_row.querySelector("#" + SELECTORS.link).addEventListener('mousedown', function(event) {
         event.preventDefault();
