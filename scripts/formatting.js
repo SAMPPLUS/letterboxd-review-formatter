@@ -35,49 +35,41 @@ const PURIFY_CONFIG = {
 var shortcutsEnabled = true;
 
 function buildFormatRowTemplate(){
-    let tmpl = document.createElement('div');
-    tmpl.id = "frmt-row";
-    tmpl.style["padding-top"] = "4px";
-    btn_builder.forEach(element => {
-        tmpl.insertAdjacentElement('beforeend', buildFormatButton(...element));
-    });
-    return tmpl;
-}
-
-function buildFormatBtnTemplate(){
-    let btn_tmpl = document.createElement('a');
+    var btn_tmpl = document.createElement('a');
     btn_tmpl.href = '#';
     btn_tmpl.classList.add('button', 'frmt-btn');
-    return btn_tmpl;
+    var tmpl = document.createElement('div');
+    tmpl.id = "frmt-row";
+    tmpl.classList.add('frmt-row');
+    btn_builder.forEach(element => {
+        let btn = btn_tmpl.cloneNode(true);
+        let [id, label, icon] = element;
+        btn.innerHTML = icon;
+        btn.id = id;
+        btn.ariaLabel = label;
+        tmpl.insertAdjacentElement('beforeend', btn);
+    });
+    return tmpl;
 }
 
 function buildPreviewBtnTemplate(){
     let btn_tmpl = document.createElement('a')
     btn_tmpl.id = 'frmt-preview';
+    btn_tmpl.classList.add('prv-btn');
     btn_tmpl.href = "#";
     btn_tmpl.ariaLabel="preview";
     btn_tmpl.classList.add('button');
     btn_tmpl.classList.add('right');
     btn_tmpl.innerText='preview'
-    btn_tmpl.style['font-size'] = ".9rem"
-    btn_tmpl.style.padding = "6px 12px 6px 12px";
     return btn_tmpl;
 }
 
 function buildPreviewAreaTemplate(){
     let prv_tmpl = document.createElement('div');
     prv_tmpl.classList.add('frmt-prv');
-    prv_tmpl.style.color="#9abs";
+    prv_tmpl.style.color="#9ab";
     prv_tmpl.style.display="none";
     return prv_tmpl;
-}
-
-function buildFormatButton(id, label, icon){ 
-    let btn = format_btn_tmpl.cloneNode(true);
-    btn.innerHTML = icon;
-    btn.id = id;
-    btn.ariaLabel = label;
-    return btn;
 }
 
 function insertTagAtRange(valueStart, valueEnd, text_area){
@@ -144,36 +136,24 @@ function insertHyperlink(text_area){
     }
 };
 
-function addHyperlinkButtonListener(container, text_area){
-    container.querySelector("#" + SELECTORS.link).addEventListener('mousedown', function(event) {
-        event.preventDefault();
-    });
-    container.querySelector("#" + SELECTORS.link).addEventListener('click', function(event) {
-        event.preventDefault();
-        insertHyperlink(text_area);
-    });
-}
-
-function addButtonListener(container,selector, valueStart, valueEnd, valueInner, text_area){
-    let btn = container.querySelector("#" + selector);
-    btn.addEventListener('mousedown', function(event) {
-        event.preventDefault();
-    });
-    btn.addEventListener('click', function(event) {
-        event.preventDefault();
-        insertTag(valueStart,valueEnd, valueInner, text_area);
-    });
-}
-
 /**
  * 
- * @param {*} container HTML parent element that contains the buttons
+ * @param {*} format_row HTML parent element that contains the buttons
  * @param {*} types the formatting types of buttons to add
  * @param {*} text_area the text area the buttons pertain to
  */
-function addFormatButtonsListeners(container, text_area){ 
+function addFormatButtonsListeners(format_row, text_area){ 
     ['bold','italic','quote'].forEach(type => {
-        addButtonListener(container, SELECTORS[type], ...TAGS[type], text_area);
+        let selector = SELECTORS[type];
+        let [valueStart, valueEnd, valueInner] = TAGS[type];
+        let btn = format_row.querySelector("#" + selector);
+        btn.addEventListener('mousedown', function(event) {
+            event.preventDefault();
+        });
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
+            insertTag(valueStart,valueEnd, valueInner, text_area);
+        });
     });
 }
 
@@ -278,8 +258,17 @@ function insertFormatRow(text_area, classList = []){
     text_area.classList.add('ltf');
     var format_row = format_row_tmpl.cloneNode(true);
     text_area.insertAdjacentElement('afterend', format_row);
+
     addFormatButtonsListeners(format_row, text_area);
-    addHyperlinkButtonListener(format_row, text_area);
+    //link button listener
+    format_row.querySelector("#" + SELECTORS.link).addEventListener('mousedown', function(event) {
+        event.preventDefault();
+    });
+    format_row.querySelector("#" + SELECTORS.link).addEventListener('click', function(event) {
+        event.preventDefault();
+        insertHyperlink(text_area);
+    });
+
     let [preview_area, preview_btn] = buildPreviewArea(text_area, classList);
     text_area.insertAdjacentElement('beforebegin', preview_area);
     format_row.insertAdjacentElement('beforeend', preview_btn);
@@ -312,8 +301,7 @@ chrome.storage.sync.get(
       shortcutsEnabled = items.shortcutsEnabled;
       addKeyboardShortcuts();
     }
-)
-const format_btn_tmpl = buildFormatBtnTemplate();
+);
 const format_row_tmpl = buildFormatRowTemplate();
 const prv_btn_tmpl = buildPreviewBtnTemplate();
 const prv_area_tmpl = buildPreviewAreaTemplate();

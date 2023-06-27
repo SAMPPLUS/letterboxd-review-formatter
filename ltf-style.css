@@ -6,6 +6,7 @@
     overflow: visible !important;
     width: fit-content !important;
 }
+
 #cboxLoadedContent {
     overflow: auto !important;
     height: fit-content !important;
@@ -28,9 +29,15 @@ textarea#frm-review {
     border-left: 1px solid #abc !important;
 }
 
+
 a.frmt-btn {
     padding: 1px 7px;
     margin: 0 2px 0 0;
+}
+
+a.prv-btn {
+    font-size: .9rem;
+    padding: 6px 12px 6px 12px;
 }
 
 div.frmt-prv {
@@ -38,4 +45,9 @@ div.frmt-prv {
     border-left: 1px #9ab solid;
     overflow: auto;
     resize: vertical;
+    color: #9ab;
+}
+
+div.frmt-row {
+    padding-top: 4px;
 }

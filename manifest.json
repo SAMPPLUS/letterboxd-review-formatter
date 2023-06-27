@@ -18,11 +18,11 @@
     "content_scripts": [
         {
             "js": ["libs/purify.min.js","scripts/formatting.js"],
+            "css": ["ltf-style.css"],
             "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/","https://*.letterboxd.com/settings/","https://*.letterboxd.com/*/list/*"]
         },
         {
             "js": ["scripts/modal-content.js", "scripts/comment-content.js"],
-            "css": ["modal.css"],
             "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/","https://*.letterboxd.com/*/list/*"]
         },
         {
