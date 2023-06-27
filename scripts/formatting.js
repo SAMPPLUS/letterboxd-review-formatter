@@ -266,6 +266,7 @@ function insertFormatRow(text_area, classList = []){
     });
     format_row.querySelector("#" + SELECTORS.link).addEventListener('click', function(event) {
         event.preventDefault();
+        if(text_area.style.display == 'none') return;
         insertHyperlink(text_area);
     });
 
