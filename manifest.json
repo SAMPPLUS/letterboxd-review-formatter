@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Letterboxd Text Formatter",
-    "version": "0.5.1",
+    "version": "1.0.0",
     "description": "A simple interface for formatting Letterboxd reviews, comments, and more.",
     "icons": {
         "16": "images/icon-16.png",
@@ -17,8 +17,8 @@
     },
     "content_scripts": [
         {
-            "js": ["libs/purify.min.js","scripts/formatting.js"],
-            "css": ["ltf-style.css"],
+            "js": ["libs/quill.js","libs/purify.min.js","scripts/formatting.js"],
+            "css": ["libs/quill.snow.css"],
             "matches": ["https://*.letterboxd.com/*film/*", "https://*.letterboxd.com/*/films/diary/","https://*.letterboxd.com/settings/","https://*.letterboxd.com/*/list/*"]
         },
         {
