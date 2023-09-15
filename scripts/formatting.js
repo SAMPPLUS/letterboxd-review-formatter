@@ -3,20 +3,21 @@ const SELECTORS = {
     italic: "frmt-italic",
     quote: "frmt-quote",
     link: "frmt-link"
-}
+} // the element class to use for each formatting option
 
 const TAGS = {
     bold: ["<b>", "</b>", "bold"],
     italic: ["<i>", "</i>", "italic"],
     quote: ["<blockquote>", "</blockquote>", "quote"]
-}
+} //HTML tags associated with each formatting option
+
 
 const ICONS = {
     bold: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#def" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bold"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg>',
     italic:'<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#def" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-italic"><line x1="19" y1="4" x2="10" y2="4"></line><line x1="14" y1="20" x2="5" y2="20"></line><line x1="15" y1="4" x2="9" y2="20"></line></svg>',
     quote: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#def" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-quote"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>',
     link: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#def" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link-2"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg>'
-}
+} //formatting icons
 
 const btn_builder = [
     [SELECTORS.bold, 'bold', ICONS.bold],
@@ -32,8 +33,13 @@ const PURIFY_CONFIG = {
   ALLOWED_TAGS: WHITELISTED_TAGS, // Only allow tags specified in the whitelist above
 }
 
-var shortcutsEnabled = true;
+var shortcutsEnabled = true; //true if keyvoard shortcuts are enabled
 
+
+/**
+ * Builds a base template for the formatting row to be copied whenever necessary
+ * @returns Element
+ */
 function buildFormatRowTemplate(){
     var btn_tmpl = document.createElement('a');
     btn_tmpl.href = '#';
@@ -52,6 +58,10 @@ function buildFormatRowTemplate(){
     return tmpl;
 }
 
+/**
+ * Builds a base template for the formatting buttons to be copied whenever necessary
+ * @returns Element
+ */
 function buildPreviewBtnTemplate(){
     let btn_tmpl = document.createElement('a')
     btn_tmpl.id = 'frmt-preview';
@@ -64,6 +74,10 @@ function buildPreviewBtnTemplate(){
     return btn_tmpl;
 }
 
+/**
+ * Builds a base template for the preview area to be copied whnever necessary
+ * @returns Elements
+ */
 function buildPreviewAreaTemplate(){
     let prv_tmpl = document.createElement('div');
     prv_tmpl.classList.add('frmt-prv');
@@ -72,6 +86,13 @@ function buildPreviewAreaTemplate(){
     return prv_tmpl;
 }
 
+/**
+ * Insert a formatting tag surrounding a highlighted selection of text
+ * @param {*} valueStart the opening format tag
+ * @param {*} valueEnd the closing format tag
+ * @param {*} text_area the text area in which to insert
+ * @returns 
+ */
 function insertTagAtRange(valueStart, valueEnd, text_area){
     var [start, end] = [text_area.selectionStart, text_area.selectionEnd];
     if(start==end) return;
@@ -86,6 +107,14 @@ function insertTagAtRange(valueStart, valueEnd, text_area){
       }
 };
 
+/**
+ * Insert a formatting tag at the caret
+ * @param {string} valueStart the opening format tag 
+ * @param {string} valueEnd the closing format tag
+ * @param {string} valueInner the placeholder text to use
+ * @param {Element} text_area the text area in which to insert
+ * @returns 
+ */
 function insertTag(valueStart, valueEnd, valueInner, text_area) {
     if(!text_area) return;
     text_area.focus();
@@ -105,6 +134,12 @@ function insertTag(valueStart, valueEnd, valueInner, text_area) {
     text_area.selectionEnd -= (valueEnd.length);
 };
 
+
+/**
+ * Insert a link into the text
+ * @param {Element} text_area the text area in which to insert
+ * @returns 
+ */
 function insertHyperlink(text_area){
     if(text_area == null) return;
     text_area.focus();
@@ -132,7 +167,7 @@ function insertHyperlink(text_area){
         //in case of execCommand deprecation (this does not allow ctrl+z undo)
         text_area.setRangeText(tag, start, end, 'end');
     }
-};
+}
 
 
 /**
@@ -164,8 +199,8 @@ function addKeyboardShortcuts(){
 
 /**
  * populates preview div with formatted text from textarea
- * @param {*} text_area
- * @param {*} preview_area 
+ * @param {Element} text_area
+ * @param {Element} preview_area 
  * @returns 
  */
 function populatePreviewArea(text_area, preview_area){
@@ -184,6 +219,13 @@ function populatePreviewArea(text_area, preview_area){
     });
 };
 
+/**
+ * Set the visibility of the text preview
+ * @param {Element} preview_area 
+ * @param {Element} text_area 
+ * @param {Element} prv_btn 
+ * @param {boolean} show_prev True if the preview should be shown
+ */
 function setPreviewVis(preview_area, text_area, prv_btn, show_prev){
     if (show_prev){
         preview_area.style.display = "block";
@@ -227,7 +269,7 @@ function buildPreviewArea(text_area, classList=[]){
 /**
  * adds a row of formatting buttons to a text area
  * @param {Element} text_area  the textarea element to add formatting buttons to
- * @returns 
+ * @returns [{Element}: the format row, {Element} the preview area, {Element} the preview button]
  */
 function insertFormatRow(text_area, classList = []){
     if(text_area == null || text_area.classList.contains('ltf')) return;
@@ -266,6 +308,13 @@ function insertFormatRow(text_area, classList = []){
     return [format_row, preview_area, preview_btn];
 }
 
+/**
+ * Used to find an element on page load. If the element is already present, returns immediately. Otherwise, sets up an observer to wait for the element.
+ * @param {str} selector the css selector to search for
+ * @param {Element} container the containing element in which to search for the element
+ * @param {bool} search_st True if subtree should be searched 
+ * @returns 
+ */
 function waitForElm(selector, container =document, search_st =true) {
     return new Promise(resolve => {
         if (container.querySelector(selector)) {
@@ -296,5 +345,4 @@ chrome.storage.sync.get(
 const format_row_tmpl = buildFormatRowTemplate();
 const prv_btn_tmpl = buildPreviewBtnTemplate();
 const prv_area_tmpl = buildPreviewAreaTemplate();
-var text_areas = new Set();
-var modal_preview_area = null;
+var text_areas = new Set(); // keeps track of the elements that have formatting rows

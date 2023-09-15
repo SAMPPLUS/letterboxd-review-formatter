@@ -9,7 +9,6 @@ waitForElm('#comments').then((container) => {
             });
         });
     });
-    
 });
 
 

@@ -24,9 +24,7 @@ waitForElm('.app-available-settings').then((container)=>{
         text_area.style.display = 'none';
         text_area.name = 'ta';
         
-        //insertFormatRow(text_area, SETTINGS_CLASSLIST);
+        insertFormatRow(text_area, SETTINGS_CLASSLIST);
     });
 });
-
-
 

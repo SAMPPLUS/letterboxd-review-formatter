@@ -1,4 +1,5 @@
 const MODAL_CLASSLIST = ["review", "body-text", "-loose", "ltfModal"];
+var modal_preview_area = null; //
 
 waitForElm('#colorbox').then((colorbox) => {
     var modal_text_area;
