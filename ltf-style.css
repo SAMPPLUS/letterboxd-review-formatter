@@ -1,21 +1,5 @@
-#colorbox {
-    overflow: visible !important;
-}
 
-#cboxWrapper{
-    overflow: visible !important;
-    width: fit-content !important;
-}
 
-#cboxLoadedContent {
-    overflow: auto !important;
-    height: fit-content !important;
-    width: fit-content !important;
-}
-
-textarea#frm-review {
-    resize: vertical !important;
-}
 
 .ltf {
     margin-bottom: 0 !important;
@@ -43,8 +27,8 @@ a.prv-btn {
 div.frmt-prv {
     padding-left: 10px;
     border-left: 1px #9ab solid;
-    overflow: auto !important;
-    resize: vertical;
+    /* overflow: auto !important;
+    resize: vertical; */
     color: #9ab;
 }
 

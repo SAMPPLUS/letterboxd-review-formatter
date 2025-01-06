@@ -188,10 +188,11 @@ function setPreviewVis(preview_area, text_area, format_row, show_prev){
     var prv_btn = format_row.querySelector('#frmt-preview');
     var frmt_btns = format_row.querySelectorAll('.frmt-btn');
     if (show_prev){
+        let preview_height = text_area.offsetHeight;
         preview_area.style.display = "block";
         populatePreviewArea(text_area, preview_area);
-        if (preview_area.scrollHeight > text_area.offsetHeight) preview_area.style.height = 'fit-content';
-        else preview_area.style.height = text_area.offsetHeight + "px";
+        console.log(text_area.offsetHeight)
+        preview_area.style.height = preview_height + "px";
         text_area.style.display = "none";
         prv_btn.innerText = "edit";
         frmt_btns.forEach(element => {
