@@ -240,13 +240,18 @@ function buildPreviewArea(text_area, classList=[]){
  * @param {Element} text_area  the textarea element to add formatting buttons to
  * @returns 
  */
-function insertFormatRow(text_area, classList = []){
+function insertFormatRow(text_area, classList = [], target = null){
     if(text_area == null || text_area.classList.contains('ltf')) return;
 
     text_areas.add(text_area);
     text_area.classList.add('ltf');
     var format_row = format_row_tmpl.cloneNode(true);
-    text_area.insertAdjacentElement('afterend', format_row);
+    if(target){
+        target.insertAdjacentElement('afterend', format_row);
+    }
+    else{
+        text_area.insertAdjacentElement('afterend', format_row);
+    }
     
     //button listeners
     ['bold','italic','quote'].forEach(type => {
@@ -291,7 +296,9 @@ function insertFormatRow(text_area, classList = []){
 }
 
 function waitForElm(selector, container =document, search_st =true) {
+    console.log("waiting for...", selector)
     return new Promise(resolve => {
+        // console.log("found", selector)
         if (container.querySelector(selector)) {
             return resolve(container.querySelector(selector));
         }
