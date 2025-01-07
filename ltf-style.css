@@ -14,6 +14,8 @@
 }
 
 
+
+
 a.frmt-btn {
     padding: 1px 7px;
     margin: 0 2px 0 0;
@@ -27,8 +29,8 @@ a.prv-btn {
 div.frmt-prv {
     padding-left: 10px;
     border-left: 1px #9ab solid;
-    /* overflow: auto !important;
-    resize: vertical; */
+    overflow: auto !important;
+    /*resize: vertical; */
     color: #9ab;
 }
 
